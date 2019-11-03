@@ -1,10 +1,12 @@
-package com.example.academy;
+package com.example.academy.Home;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+
+import com.example.academy.R;
 
 import java.util.ArrayList;
 
