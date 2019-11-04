@@ -1,4 +1,4 @@
-package com.example.academy.Data;
+package com.example.academy.Ui.Data;
 
 public class ModuleEntity {
     // call content entity in module

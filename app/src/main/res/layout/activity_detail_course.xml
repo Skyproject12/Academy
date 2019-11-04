@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Detail.DetailCourseActivity">
+    tools:context=".Ui.Detail.DetailCourseActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:theme="@style/AppTheme.AppBarOverlay"

@@ -1,17 +1,11 @@
-package com.example.academy.Home;
+package com.example.academy.Ui.Home;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.example.academy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
-
-import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity  {
 

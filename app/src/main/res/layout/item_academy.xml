@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@color/colorImage"
-            android:aligmentParentTop="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_width="120dp"
             android:layout_height="120dp"

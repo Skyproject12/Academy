@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Reader.List.ModuleListFragment">
+    tools:context=".Ui.Reader.List.ModuleListFragment">
 
     <ProgressBar
         android:id="@+id/progress_bar"

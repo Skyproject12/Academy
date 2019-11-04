@@ -1,4 +1,4 @@
-package com.example.academy.Reader;
+package com.example.academy.Ui.Reader;
 
 import androidx.appcompat.app.AppCompatActivity;
 

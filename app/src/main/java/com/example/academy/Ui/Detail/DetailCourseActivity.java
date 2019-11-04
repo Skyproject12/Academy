@@ -1,4 +1,4 @@
-package com.example.academy.Detail;
+package com.example.academy.Ui.Detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +9,8 @@ import com.example.academy.R;
 
 public class DetailCourseActivity extends AppCompatActivity {
 
+
+    public static final String EXTRA_COURSE ="extra_course" ;
     Toolbar toolbar;
 
     @Override

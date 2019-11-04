@@ -1,7 +1,7 @@
 package com.example.academy.Utils;
 
-import com.example.academy.Data.CourseEntity;
-import com.example.academy.Data.ModuleEntity;
+import com.example.academy.Ui.Data.CourseEntity;
+import com.example.academy.Ui.Data.ModuleEntity;
 
 import java.util.ArrayList;
 
