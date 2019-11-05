@@ -19,7 +19,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/img_poster"
+            android:id="@+id/gambar_bookmark"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_alignParentStart="true"
@@ -36,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
@@ -44,7 +45,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img_poster"
+            app:layout_constraintStart_toEndOf="@+id/gambar_bookmark"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/title" />
 

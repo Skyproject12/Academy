@@ -24,10 +24,10 @@ public class AcademyAdapter extends RecyclerView.Adapter<AcademyAdapter.ViewHold
 
     final Activity activity;
     private List<CourseEntity> mCourse= new ArrayList<>();
-    private String academyFragemnt;
 
     public AcademyAdapter(Activity activity) {
         this.activity = activity;
+        this.mCourse = mCourse;
     }
 
     public List<CourseEntity> getmCourse() {
@@ -36,11 +36,12 @@ public class AcademyAdapter extends RecyclerView.Adapter<AcademyAdapter.ViewHold
     public static final String EXTRA_COURCE ="extra_course" ;
 
     public void setListCourse(List<CourseEntity> mCourse) {
-        if(mCourse==null) return;
-        this.mCourse.addAll(mCourse);
+        if(mCourse==null)return;
         this.mCourse.clear();
-
+        this.mCourse.addAll(mCourse);
     }
+
+
 
     @NonNull
     @Override
@@ -63,6 +64,7 @@ public class AcademyAdapter extends RecyclerView.Adapter<AcademyAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(activity, DetailCourseActivity.class);
+                // put extra for id course
                 intent.putExtra(EXTRA_COURCE, getmCourse().get(position).getCourseId());
                 activity.startActivity(intent);
 

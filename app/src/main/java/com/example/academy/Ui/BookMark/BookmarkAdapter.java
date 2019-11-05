@@ -25,7 +25,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
     // call interface to set onclick
     private final BookmarkFragmentCallback callback;
     private ArrayList<CourseEntity> course = new ArrayList<>();
-    private ArrayList<CourseEntity> couse= new ArrayList<>();
 
     public BookmarkAdapter(Activity activity, BookmarkFragmentCallback callback) {
         this.activity = activity;
@@ -34,8 +33,8 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
 
     public void setCourse(ArrayList<CourseEntity> course) {
         if(course==null) return;
-        this.course.addAll(course);
         this.course.clear();
+        this.course.addAll(course);
     }
 
     @NonNull
@@ -54,6 +53,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
         // set click itemview intent to detail course
         holder.itemView.setOnClickListener(v->{
             Intent intent= new Intent(activity, DetailCourseActivity.class);
+            // putExtra with courseId
             intent.putExtra(DetailCourseActivity.EXTRA_COURSE, courseEntity.getCourseId());
             activity.startActivity(intent);
 
@@ -84,7 +84,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
             tvDate= itemView.findViewById(R.id.tv_item_date);
             tvDescription= itemView.findViewById(R.id.tv_item_description);
             imgShare= itemView.findViewById(R.id.img_share);
-            imgPoster= itemView.findViewById(R.id.image_poster);
+            imgPoster= itemView.findViewById(R.id.gambar_bookmark);
 
         }
     }

@@ -62,7 +62,7 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
                     .from(getActivity())
                     .setType(mimeType)
                     .setChooserTitle("Bagikan aplikasi ini sekarang")
-                    .setText(String.format("Segera daftar kelas %s di dicoding.com"))
+                    .setText(String.format("Segera daftar kelas %s di dicoding.com", courseEntity.getTitle()))
                     .startChooser();
         }
     }
