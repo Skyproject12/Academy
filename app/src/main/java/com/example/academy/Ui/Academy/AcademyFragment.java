@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.academy.Data.CourseEntity;
 import com.example.academy.R;
 import com.example.academy.Utils.DataDummy;
+
+import java.util.List;
 
 
 /**
@@ -27,6 +31,8 @@ public class AcademyFragment extends Fragment {
     private RecyclerView rvCouse;
     private ProgressBar progressBar;
     private AcademyAdapter academyAdapter;
+    private AcademyViewModel academyViewModel;
+    private List<CourseEntity> course;
 
 
     public AcademyFragment() {
@@ -59,9 +65,13 @@ public class AcademyFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(getActivity()!=null){
+            // initial about viewmodel
+            academyViewModel= ViewModelProviders.of(this).get(AcademyViewModel.class);
+            // set arraylist into data from viewmodel
+            course= academyViewModel.getCourse();
             academyAdapter= new AcademyAdapter(getActivity());
-            // set value from generatorDummy in Datadummy
-            academyAdapter.setListCourse(DataDummy.generateDummy());
+            // set value from viewmodel
+            academyAdapter.setListCourse(course);
             rvCouse.setLayoutManager(new LinearLayoutManager(getContext()));
             rvCouse.setHasFixedSize(true);
             // sen adapter

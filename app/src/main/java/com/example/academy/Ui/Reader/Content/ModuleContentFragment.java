@@ -14,7 +14,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.example.academy.R;
-import com.example.academy.Ui.Data.ContentEntity;
+import com.example.academy.Data.ContentEntity;
 
 public class ModuleContentFragment extends Fragment {
 

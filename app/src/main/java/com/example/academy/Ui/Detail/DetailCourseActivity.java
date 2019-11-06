@@ -2,6 +2,7 @@ package com.example.academy.Ui.Detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,14 +13,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.academy.Data.ModuleEntity;
 import com.example.academy.R;
-import com.example.academy.Ui.Data.CourseEntity;
+import com.example.academy.Data.CourseEntity;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Utils.DataDummy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailCourseActivity extends AppCompatActivity {
 
@@ -34,6 +38,10 @@ public class DetailCourseActivity extends AppCompatActivity {
     private DetailCourseAdapter adapter;
     private ImageView imagePoster;
     private ProgressBar progressBar;
+    private DetailCourseActivity detailCourseActivity;
+    private List<ModuleEntity> courseMod;
+    private DetailCourseViewModel detailCourseViewModel;
+    String idCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,9 @@ public class DetailCourseActivity extends AppCompatActivity {
         if(getSupportActionBar()!=null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        adapter= new DetailCourseAdapter(DataDummy.generateDummyModules(getIntent().getExtras().getString(EXTRA_COURSE)));
+        idCourse= getIntent().getExtras().getString(EXTRA_COURSE);
+        detailCourseViewModel= ViewModelProviders.of(this).get(DetailCourseViewModel.class);
+
         progressBar= findViewById(R.id.progress_bar);
         btnStart= findViewById(R.id.btn_start);
         textTitle= findViewById(R.id.text_title);
@@ -50,6 +60,10 @@ public class DetailCourseActivity extends AppCompatActivity {
         textDate= findViewById(R.id.text_date);
         rvModule= findViewById(R.id.rv_module);
         imagePoster= findViewById(R.id.image_poster);
+
+        detailCourseViewModel.setCourseId(idCourse);
+        courseMod= detailCourseViewModel.getModules();
+        adapter= new DetailCourseAdapter(courseMod);
 
         // set data for detail
         populateCourse(getIntent().getExtras().getString(EXTRA_COURSE));

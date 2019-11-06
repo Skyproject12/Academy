@@ -1,4 +1,4 @@
-package com.example.academy.Ui.Data;
+package com.example.academy.Data;
 
 public class ContentEntity {
     private String mContent;

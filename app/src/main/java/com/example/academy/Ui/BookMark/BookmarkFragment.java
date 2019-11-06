@@ -10,29 +10,36 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.academy.R;
-import com.example.academy.Ui.Data.CourseEntity;
+import com.example.academy.Data.CourseEntity;
 import com.example.academy.Utils.DataDummy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BookmarkFragment extends Fragment implements BookmarkFragmentCallback {
 
-     View view;
-     private BookmarkAdapter adapter;
-     private RecyclerView rvBookmark;
-     private ProgressBar progressBar;
+    View view;
+    private BookmarkAdapter adapter;
+    private RecyclerView rvBookmark;
+    private ProgressBar progressBar;
 
-      public BookmarkFragment(){
-          // create costructor
-      }
+    private BookmarkViewModel bookmarkViewModel;
+    private ArrayList<CourseEntity> course;
 
-      public static Fragment newInstance(){
-          return new BookmarkFragment();
+    public BookmarkFragment(){
+        // create costructor
+    }
 
-      }
+    public static Fragment newInstance(){
+        return new BookmarkFragment();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,10 +78,15 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(getActivity()!=null){
+            // call viewmodel
+            bookmarkViewModel= ViewModelProviders.of(this).get(BookmarkViewModel.class);
+            // set data array list from viewmodel
+            course= bookmarkViewModel.getBookmarks();
+
             // set recyclervview
             adapter= new BookmarkAdapter(getActivity(), this);
             // set bootmark course use class Datadummy
-            adapter.setCourse(DataDummy.generateDummy());
+            adapter.setCourse(course);
             rvBookmark.setLayoutManager(new LinearLayoutManager(getContext()));
             rvBookmark.setHasFixedSize(true);
             // set adapter

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.academy.R;
-import com.example.academy.Ui.Data.CourseEntity;
+import com.example.academy.Data.CourseEntity;
 import com.example.academy.Ui.Detail.DetailCourseActivity;
 
 import java.util.ArrayList;
