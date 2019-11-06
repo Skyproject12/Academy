@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,17 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import com.example.academy.Data.ModuleEntity;
 import com.example.academy.R;
 import com.example.academy.Data.ContentEntity;
+import com.example.academy.Ui.Reader.CourseReaderViewModel;
 
 public class ModuleContentFragment extends Fragment {
 
     public  static final String TAG = "ModuleContentFragment";
     private WebView webView;
     private ProgressBar progressBar;
+    private CourseReaderViewModel courseReaderViewModel;
 
     public static ModuleContentFragment newInstance(){
         return new ModuleContentFragment();
@@ -51,15 +55,20 @@ public class ModuleContentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // if this activity not null
         if(getActivity()!=null){
+            courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
+            // call courseEntity from module entity
+            ModuleEntity moduleEntity= courseReaderViewModel.getSlectedModule();
             // set format of webview
-            ContentEntity entity= new ContentEntity("<h3 class=\\\"fr-text-bordered\\\">Contoh Content</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>");
-            populateWebView(entity);
+            //ContentEntity entity= new ContentEntity("<h3 class=\\\"fr-text-bordered\\\">Contoh Content</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>");
+            // set moduleentity
+            populateWebView(moduleEntity);
         }
     }
 
     // set webview
-    private void populateWebView(ContentEntity contentEntity){
-        webView.loadData(contentEntity.getmContent(), "text/html", "UTF-8");
+    private void populateWebView(ModuleEntity moduleEntity){
+        // load webview
+        webView.loadData(moduleEntity.contentEntity.getmContent(), "text/html", "UTF-8");
     }
 
 }

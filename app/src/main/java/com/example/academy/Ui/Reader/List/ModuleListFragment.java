@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.example.academy.R;
 import com.example.academy.Data.ModuleEntity;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Ui.Reader.CourseReaderCallback;
+import com.example.academy.Ui.Reader.CourseReaderViewModel;
 import com.example.academy.Utils.DataDummy;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     private CourseReaderCallback courseReaderCallback;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private CourseReaderViewModel courseReaderViewModel;
 
     public static ModuleListFragment newInstance(){
         return new ModuleListFragment();
@@ -64,8 +67,11 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(getActivity()!=null){
+            // initial viewmodel
+            courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
             moduleListAdapter= new ModuleListAdapter(this);
-            populateRecyclerView(DataDummy.generateDummyModules("a14"));
+            // set module data from viewmodel
+            populateRecyclerView(courseReaderViewModel.getModules());
         }
     }
 
@@ -80,6 +86,8 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
         // set position or moduleId if recyclerview click
         courseReaderCallback.moveTo(position, moduleId);
         // if click recycler view can run interface move to or send position into activity parent
+        // mengeset data dari selected
+        courseReaderViewModel.setSelectedModule(moduleId);
     }
 
     // set module list

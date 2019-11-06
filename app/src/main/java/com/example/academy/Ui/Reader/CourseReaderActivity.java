@@ -3,6 +3,7 @@ package com.example.academy.Ui.Reader;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import com.example.academy.Ui.Reader.List.ModuleListFragment;
 public class CourseReaderActivity extends AppCompatActivity implements CourseReaderCallback {
 
     public static final String EXTRA_COURSE_ID ="extra_course_id" ;
+    private CourseReaderViewModel courseReaderViewModel;
 
 
     @Override
@@ -23,11 +25,16 @@ public class CourseReaderActivity extends AppCompatActivity implements CourseRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_reader);
         Bundle bundle= getIntent().getExtras();
+        // set viewmodel
+        courseReaderViewModel= ViewModelProviders.of(this).get(CourseReaderViewModel.class);
+
         if(bundle!=null){
             // menangkap id course yang akan di baca
             String courseId= bundle.getString(EXTRA_COURSE_ID);
             // jika id tidak kosong
             if(courseId!=null){
+                // set course id from viewmodel
+                courseReaderViewModel.setCourseId(courseId);
                 // mengeset fragment module list fragment di activity
                 populateFragment();
             }
