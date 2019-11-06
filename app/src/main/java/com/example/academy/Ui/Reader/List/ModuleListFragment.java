@@ -86,7 +86,7 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
         // set position or moduleId if recyclerview click
         courseReaderCallback.moveTo(position, moduleId);
         // if click recycler view can run interface move to or send position into activity parent
-        // mengeset data dari selected
+        // mengeset data berdasarkan modul yang di klik
         courseReaderViewModel.setSelectedModule(moduleId);
     }
 
