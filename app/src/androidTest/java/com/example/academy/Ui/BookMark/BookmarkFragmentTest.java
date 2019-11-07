@@ -17,18 +17,18 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
 public class BookmarkFragmentTest {
+
     @Rule
-    public ActivityTestRule<SingleFragmentActivity> activityRule = new ActivityTestRule<>(SingleFragmentActivity.class, false, false);
-    private BookmarkFragment bookmarkFragment = new BookmarkFragment();
-
+    public ActivityTestRule<SingleFragmentActivity> activityTestRule= new ActivityTestRule<>(SingleFragmentActivity.class);
+    private BookmarkFragment bookmarkFragment= new BookmarkFragment();
     @Before
-    public void setUp() {
-        activityRule.getActivity().setFragment(bookmarkFragment);
+    public void setUp(){
+        activityTestRule.getActivity().setFragment(bookmarkFragment);
     }
-
     @Test
-    public void loadBookmarks() {
+    public void loadBookmarrk() {
         onView(withId(R.id.rv_bookmark)).check(matches(isDisplayed()));
         onView(withId(R.id.rv_bookmark)).check(new RecyclerViewItemCountAssertion(5));
     }
+
 }
