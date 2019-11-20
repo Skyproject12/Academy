@@ -1,6 +1,7 @@
 package com.example.academy.Utils;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import com.example.academy.Data.source.remote.response.ContentResponse;
 import com.example.academy.Data.source.remote.response.CourseResponse;
@@ -43,10 +44,10 @@ public class JsonHelper {
         ArrayList<CourseResponse> list= new ArrayList<>();
         try {
             // take object file json
-            JSONObject responseObject= new JSONObject(parsingFileToString("CourseResponse.json"));
+            JSONObject responseObject= new JSONObject(parsingFileToString("CourseResponses.json"));
             // take array course
-            JSONArray listArray= responseObject.getJSONArray("course");
-            for (int i = 0; i <listArray.length() ; i++) {
+            JSONArray listArray= responseObject.getJSONArray("courses");
+            for (int i = 0; i < listArray.length() ; i++) {
                 // take object array
                 JSONObject course= listArray.getJSONObject(i);
                 String id= course.getString("id");

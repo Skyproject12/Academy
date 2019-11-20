@@ -59,7 +59,7 @@ public class AcademyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvCouse= view.findViewById(R.id.rv_academy);
         progressBar= view.findViewById(R.id.progress_bar);
-
+        ;
     }
 
     @Override
