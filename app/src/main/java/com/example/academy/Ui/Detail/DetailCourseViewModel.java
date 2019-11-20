@@ -2,8 +2,8 @@ package com.example.academy.Ui.Detail;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.academy.Data.CourseEntity;
-import com.example.academy.Data.ModuleEntity;
+import com.example.academy.Data.source.local.entity.CourseEntity;
+import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.Utils.DataDummy;
 
 import java.util.List;

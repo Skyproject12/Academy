@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.academy.R;
-import com.example.academy.Data.CourseEntity;
-import com.example.academy.Utils.DataDummy;
+import com.example.academy.Data.source.local.entity.CourseEntity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class BookmarkFragment extends Fragment implements BookmarkFragmentCallback {

@@ -18,11 +18,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.academy.R;
-import com.example.academy.Data.ModuleEntity;
+import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Ui.Reader.CourseReaderCallback;
 import com.example.academy.Ui.Reader.CourseReaderViewModel;
-import com.example.academy.Utils.DataDummy;
 
 import java.util.List;
 

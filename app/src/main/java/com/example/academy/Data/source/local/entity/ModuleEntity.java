@@ -1,4 +1,6 @@
-package com.example.academy.Data;
+package com.example.academy.Data.source.local.entity;
+
+import com.example.academy.Data.source.local.entity.ContentEntity;
 
 public class ModuleEntity {
     // call content entity in module

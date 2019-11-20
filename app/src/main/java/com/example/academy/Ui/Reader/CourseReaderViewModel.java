@@ -2,8 +2,8 @@ package com.example.academy.Ui.Reader;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.academy.Data.ContentEntity;
-import com.example.academy.Data.ModuleEntity;
+import com.example.academy.Data.source.local.entity.ContentEntity;
+import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.Utils.DataDummy;
 
 import java.util.ArrayList;

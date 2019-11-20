@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import com.example.academy.Data.ModuleEntity;
+import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.R;
-import com.example.academy.Data.ContentEntity;
 import com.example.academy.Ui.Reader.CourseReaderViewModel;
 
 public class ModuleContentFragment extends Fragment {

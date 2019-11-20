@@ -15,9 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.example.academy.Data.CourseEntity;
+import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.R;
-import com.example.academy.Utils.DataDummy;
 
 import java.util.List;
 

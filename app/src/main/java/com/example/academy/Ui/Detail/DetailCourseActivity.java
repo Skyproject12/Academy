@@ -16,13 +16,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.academy.Data.ModuleEntity;
+import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.R;
-import com.example.academy.Data.CourseEntity;
+import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Utils.DataDummy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DetailCourseActivity extends AppCompatActivity {
