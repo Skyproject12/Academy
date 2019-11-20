@@ -10,14 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.academy.R;
 import com.example.academy.Data.source.local.entity.CourseEntity;
+import com.example.academy.viewmodel.viewModelVactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class BookmarkFragment extends Fragment implements BookmarkFragmentCallback {
@@ -28,7 +31,7 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
     private ProgressBar progressBar;
 
     private BookmarkViewModel bookmarkViewModel;
-    private ArrayList<CourseEntity> course;
+    private List<CourseEntity> course;
 
     public BookmarkFragment(){
         // create costructor
@@ -76,8 +79,10 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(getActivity()!=null){
+            // call fucntion viewmodel
+            bookmarkViewModel= obtainViewModel(getActivity());
             // call viewmodel
-            bookmarkViewModel= ViewModelProviders.of(this).get(BookmarkViewModel.class);
+            //bookmarkViewModel= ViewModelProviders.of(this).get(BookmarkViewModel.class);
             // set data array list from viewmodel
             course= bookmarkViewModel.getBookmarks();
 
@@ -90,5 +95,11 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
             // set adapter
             rvBookmark.setAdapter(adapter);
         }
+    }
+
+    @NonNull
+    private static BookmarkViewModel obtainViewModel(FragmentActivity activity){
+        viewModelVactory factory= viewModelVactory.getInstance(activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(BookmarkViewModel.class);
     }
 }

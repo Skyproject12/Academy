@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Ui.Reader.CourseReaderCallback;
 import com.example.academy.Ui.Reader.CourseReaderViewModel;
+import com.example.academy.viewmodel.viewModelVactory;
 
 import java.util.List;
 
@@ -66,6 +68,8 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(getActivity()!=null){
+            // initial about viewmodel
+            courseReaderViewModel= obtainViewModel(getActivity());
             // initial viewmodel
             courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
             moduleListAdapter= new ModuleListAdapter(this);
@@ -98,6 +102,12 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
         recyclerView.setAdapter(moduleListAdapter);
         DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    private static CourseReaderViewModel obtainViewModel(FragmentActivity activity){
+        viewModelVactory factory = viewModelVactory.getInstance(activity.getApplication());
+        return ViewModelProviders.of(activity,factory).get(CourseReaderViewModel.class);
+
     }
 
 }

@@ -19,6 +19,7 @@ import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Ui.Detail.DetailCourseActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder> {
     private final Activity activity;
@@ -31,7 +32,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHo
         this.callback = callback;
     }
 
-    public void setCourse(ArrayList<CourseEntity> course) {
+    public void setCourse(List<CourseEntity> course) {
         if(course==null) return;
         this.course.clear();
         this.course.addAll(course);

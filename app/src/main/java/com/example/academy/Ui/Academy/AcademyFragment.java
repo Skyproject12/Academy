@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.R;
+import com.example.academy.viewmodel.viewModelVactory;
 
 import java.util.List;
 
@@ -64,8 +66,9 @@ public class AcademyFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(getActivity()!=null){
+            academyViewModel= obtainViewModel(getActivity());
             // initial about viewmodel
-            academyViewModel= ViewModelProviders.of(this).get(AcademyViewModel.class);
+            //academyViewModel= ViewModelProviders.of(this).get(AcademyViewModel.class);
             // set arraylist into data from viewmodel
             course= academyViewModel.getCourse();
             academyAdapter= new AcademyAdapter(getActivity());
@@ -76,5 +79,14 @@ public class AcademyFragment extends Fragment {
             // sen adapter
             rvCouse.setAdapter(academyAdapter);
         }
+    }
+
+    @NonNull
+    private static AcademyViewModel obtainViewModel(FragmentActivity activity){
+        // call viewmodel factory
+        viewModelVactory factory= viewModelVactory.getInstance(activity.getApplication());
+        // call academy view model use viewmodel factory
+        return ViewModelProviders.of(activity, factory).get(AcademyViewModel.class);
+
     }
 }

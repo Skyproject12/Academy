@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.R;
 import com.example.academy.Ui.Reader.CourseReaderViewModel;
+import com.example.academy.viewmodel.viewModelVactory;
 
 public class ModuleContentFragment extends Fragment {
 
@@ -54,7 +56,9 @@ public class ModuleContentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // if this activity not null
         if(getActivity()!=null){
-            courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
+            // initial viewmodel
+            courseReaderViewModel= obtainViewModel(getActivity());
+            //courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
             // call courseEntity from module entity
             ModuleEntity moduleEntity= courseReaderViewModel.getSlectedModule();
             // set format of webview
@@ -68,6 +72,11 @@ public class ModuleContentFragment extends Fragment {
     private void populateWebView(ModuleEntity moduleEntity){
         // load webview
         webView.loadData(moduleEntity.contentEntity.getmContent(), "text/html", "UTF-8");
+    }
+    private static CourseReaderViewModel obtainViewModel (FragmentActivity activity){
+        viewModelVactory factory= viewModelVactory.getInstance(activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(CourseReaderViewModel.class);
+
     }
 
 }

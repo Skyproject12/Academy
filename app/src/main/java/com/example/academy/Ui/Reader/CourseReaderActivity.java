@@ -2,6 +2,7 @@ package com.example.academy.Ui.Reader;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import com.example.academy.R;
 import com.example.academy.Ui.Reader.Content.ModuleContentFragment;
 import com.example.academy.Ui.Reader.List.ModuleListFragment;
+import com.example.academy.viewmodel.viewModelVactory;
 
 // bertugas menampung dari beberapa fragment yang nantinya akan di lihat di bagian daftar modul or kontent dari modul
 // module content fragment or modul list fragment
@@ -25,8 +27,10 @@ public class CourseReaderActivity extends AppCompatActivity implements CourseRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_reader);
         Bundle bundle= getIntent().getExtras();
+//        initial view model
+        courseReaderViewModel= obtainViewModel(this);
         // set viewmodel
-        courseReaderViewModel= ViewModelProviders.of(this).get(CourseReaderViewModel.class);
+        //courseReaderViewModel= ViewModelProviders.of(this).get(CourseReaderViewModel.class);
 
         if(bundle!=null){
             // menangkap id course yang akan di baca
@@ -73,5 +77,11 @@ public class CourseReaderActivity extends AppCompatActivity implements CourseRea
         }
         // melakukan commit penambahan fragment ke dalam activity dengan id frame container
         fragmentTransaction.commit();
+    }
+    private static CourseReaderViewModel obtainViewModel(FragmentActivity activity){
+
+        viewModelVactory factory= viewModelVactory.getInstance(activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(CourseReaderViewModel.class);
+
     }
 }

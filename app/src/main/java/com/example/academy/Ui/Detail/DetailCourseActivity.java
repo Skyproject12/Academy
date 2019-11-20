@@ -21,6 +21,7 @@ import com.example.academy.R;
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Utils.DataDummy;
+import com.example.academy.viewmodel.viewModelVactory;
 
 import java.util.List;
 
@@ -50,7 +51,9 @@ public class DetailCourseActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         idCourse= getIntent().getExtras().getString(EXTRA_COURSE);
-        detailCourseViewModel= ViewModelProviders.of(this).get(DetailCourseViewModel.class);
+        // initialisasi viewmodel from class repository
+        detailCourseViewModel= obtainViewModel(this);
+        //detailCourseViewModel= ViewModelProviders.of(this).get(DetailCourseViewModel.class);
 
         progressBar= findViewById(R.id.progress_bar);
         btnStart= findViewById(R.id.btn_start);
@@ -94,5 +97,9 @@ public class DetailCourseActivity extends AppCompatActivity {
             intent.putExtra(CourseReaderActivity.EXTRA_COURSE_ID, courseId);
             v.getContext().startActivity(intent);
         });
+    }
+    private static DetailCourseViewModel obtainViewModel(AppCompatActivity activity){
+        viewModelVactory factory= viewModelVactory.getInstance(activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(DetailCourseViewModel.class);
     }
 }
