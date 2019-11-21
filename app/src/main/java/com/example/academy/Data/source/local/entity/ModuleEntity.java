@@ -12,6 +12,9 @@ public class ModuleEntity {
     // use status read
     private boolean mRead= false;
 
+    public ModuleEntity() {
+    }
+
     public ModuleEntity(String mModuleId, String mCourseId, String mTitle, Integer mPosition, Boolean read) {
         this.mModuleId = mModuleId;
         this.mCourseId = mCourseId;
