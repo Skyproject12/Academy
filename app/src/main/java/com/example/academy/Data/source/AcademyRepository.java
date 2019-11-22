@@ -169,12 +169,14 @@ public class AcademyRepository implements AcademyDataSource {
         remoteRepository.getModule(courseId, new RemoteRepository.LoadModulesCallback() {
             @Override
             public void onAllModulesReceived(List<ModuleResponse> moduleResponses) {
-                ModuleEntity  module= null;
+                ModuleEntity  module;
                 for (int i=0; i<moduleResponses.size(); i++){
                     ModuleResponse moduleResponse= moduleResponses.get(i);
                     // mengmbil id dari module untuk menjalankan content
                     String id= moduleResponse.getModuleId();
                     if(id.equals(moduleId)){
+                        // set module from remote repositori architecture android
+                        module= new ModuleEntity(id, moduleResponse.getCourseId(), moduleResponse.getTitle(), moduleResponse.getPosition(), false);
                         remoteRepository.getContent(moduleId, new RemoteRepository.GetContentCallback() {
                             @Override
                             public void onContentReceived(ContentResponse contentResponse) {
