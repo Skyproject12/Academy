@@ -82,14 +82,15 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
             // call fucntion viewmodel
             bookmarkViewModel= obtainViewModel(getActivity());
             // call viewmodel
-            //bookmarkViewModel= ViewModelProviders.of(this).get(BookmarkViewModel.class);
             // set data array list from viewmodel
-            course= bookmarkViewModel.getBookmarks();
-
             // set recyclervview
             adapter= new BookmarkAdapter(getActivity(), this);
-            // set bootmark course use class Datadummy
-            adapter.setCourse(course);
+            // set Observe from livedata viewmodel
+            bookmarkViewModel.getBookmarks().observe(this, course -> {
+                progressBar.setVisibility(View.GONE);
+                adapter.setCourse(course);
+                adapter.notifyDataSetChanged();
+            });
             rvBookmark.setLayoutManager(new LinearLayoutManager(getContext()));
             rvBookmark.setHasFixedSize(true);
             // set adapter

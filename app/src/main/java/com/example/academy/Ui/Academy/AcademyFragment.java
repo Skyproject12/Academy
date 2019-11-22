@@ -68,15 +68,19 @@ public class AcademyFragment extends Fragment {
         if(getActivity()!=null){
             academyViewModel= obtainViewModel(getActivity());
             // initial about viewmodel
-            //academyViewModel= ViewModelProviders.of(this).get(AcademyViewModel.class);
             // set arraylist into data from viewmodel
-            course= academyViewModel.getCourse();
             academyAdapter= new AcademyAdapter(getActivity());
-            // set value from viewmodel
-            academyAdapter.setListCourse(course);
+            // set viewmodel when use livedata
+            academyViewModel.getCourse().observe(this, course->{
+                progressBar.setVisibility(View.GONE);
+                // set courses
+                academyAdapter.setListCourse(course);
+                academyAdapter.notifyDataSetChanged();
+
+            });
             rvCouse.setLayoutManager(new LinearLayoutManager(getContext()));
             rvCouse.setHasFixedSize(true);
-            // sen adapter
+            // set adapter
             rvCouse.setAdapter(academyAdapter);
         }
     }

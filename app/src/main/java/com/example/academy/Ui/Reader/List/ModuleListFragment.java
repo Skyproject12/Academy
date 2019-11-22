@@ -73,8 +73,13 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
             // initial viewmodel
             courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
             moduleListAdapter= new ModuleListAdapter(this);
-            // set module data from viewmodel
-            populateRecyclerView(courseReaderViewModel.getModules());
+            courseReaderViewModel.getModules().observe(this, moduleEntities -> {
+                if(moduleEntities!=null){
+                    // getModul from viewmodel in live data
+                    progressBar.setVisibility(View.GONE);
+                    populateRecyclerView(moduleEntities);
+                }
+            });
         }
     }
 

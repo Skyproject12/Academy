@@ -1,5 +1,6 @@
 package com.example.academy.Ui.Reader;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.academy.Data.source.AcademyRepository;
@@ -23,8 +24,9 @@ public class CourseReaderViewModel extends ViewModel {
     }
 
     // set module
-    public List<ModuleEntity> getModules(){
+    public LiveData<List<ModuleEntity>> getModules(){
         return academyRepository.getAllModuleByCourse(courseId);
+
     }
 
     public String getCourseId() {
@@ -36,9 +38,8 @@ public class CourseReaderViewModel extends ViewModel {
     }
 
     // if click detail modul
-    public ModuleEntity getSlectedModule(){
-       return academyRepository.getContent(courseId, moduleId);
-
+    public LiveData<ModuleEntity> getSlectedModule(){
+        return academyRepository.getContent(courseId, moduleId);
     }
 
     public void setSelectedModule(String moduleId){

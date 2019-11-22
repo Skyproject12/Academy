@@ -30,7 +30,6 @@ public class CourseReaderActivity extends AppCompatActivity implements CourseRea
 //        initial view model
         courseReaderViewModel= obtainViewModel(this);
         // set viewmodel
-        //courseReaderViewModel= ViewModelProviders.of(this).get(CourseReaderViewModel.class);
 
         if(bundle!=null){
             // menangkap id course yang akan di baca

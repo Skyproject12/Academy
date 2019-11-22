@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -53,7 +54,6 @@ public class DetailCourseActivity extends AppCompatActivity {
         idCourse= getIntent().getExtras().getString(EXTRA_COURSE);
         // initialisasi viewmodel from class repository
         detailCourseViewModel= obtainViewModel(this);
-        //detailCourseViewModel= ViewModelProviders.of(this).get(DetailCourseViewModel.class);
 
         progressBar= findViewById(R.id.progress_bar);
         btnStart= findViewById(R.id.btn_start);
@@ -62,10 +62,12 @@ public class DetailCourseActivity extends AppCompatActivity {
         textDate= findViewById(R.id.text_date);
         rvModule= findViewById(R.id.rv_module);
         imagePoster= findViewById(R.id.image_poster);
-
         detailCourseViewModel.setCourseId(idCourse);
-        courseMod= detailCourseViewModel.getModules();
-        adapter= new DetailCourseAdapter(courseMod);
+
+        detailCourseViewModel.getModules().observe(this, moduleEntities -> {
+            progressBar.setVisibility(View.GONE);
+            adapter= new DetailCourseAdapter(courseMod);
+        });
 
         // set data for detail
         populateCourse(getIntent().getExtras().getString(EXTRA_COURSE));
