@@ -1,9 +1,13 @@
 package com.example.academy.Data.source;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.academy.Data.source.local.entity.ContentEntity;
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Data.source.local.entity.ModuleEntity;
 import com.example.academy.Data.source.remote.RemoteRepository;
+import com.example.academy.Data.source.remote.response.ContentResponse;
 import com.example.academy.Data.source.remote.response.CourseResponse;
 import com.example.academy.Data.source.remote.response.ModuleResponse;
 
@@ -35,110 +39,165 @@ public class AcademyRepository implements AcademyDataSource {
     }
 
     @Override
-    public List<CourseEntity> getAllCourse() {
-        // get getallcourse from remoteRepository
-        List<CourseResponse> courseResponses= remoteRepository.getAllCourses();
-        ArrayList<CourseEntity> courseList= new ArrayList<>();
-        for (int i=0; i< courseResponses.size(); i++){
-            // tampung hasil dari get ke dalam suatu perulangan object CourseResponse
-            CourseResponse response= courseResponses.get(i);
-            // memasukkan hasil select kedalam object course entity
-            CourseEntity course=new CourseEntity(
-                    response.getId(),
-                    response.getTitle(),
-                    response.getDescription(),
-                    response.getDate(),
-                    false,
-                    response.getImagePath());
+    public LiveData<List<CourseEntity>> getAllCourse() {
+        MutableLiveData<List<CourseEntity>> coursesEnti= new MutableLiveData<>();
+        remoteRepository.getAllCourses(new RemoteRepository.LoadCoursesCallback() {
+            // mengambil data dari remote repository jika data berhasil di load
+            @Override
+            public void onAllCoursesReceived(List<CourseResponse> courseResponses) {
+                ArrayList<CourseEntity> courseList= new ArrayList<>();
+                for (int i=0; i< courseResponses.size(); i++){
+                    // tampung hasil dari get ke dalam suatu perulangan object CourseResponse
+                    CourseResponse response= courseResponses.get(i);
+                    // memasukkan hasil select kedalam object course entity
+                    CourseEntity course=new CourseEntity(
+                            response.getId(),
+                            response.getTitle(),
+                            response.getDescription(),
+                            response.getDate(),
+                            false,
+                            response.getImagePath());
+                    courseList.add(course);
+                }// mereturn arraylist yang telah menampung data
 
-            courseList.add(course);
-
-        }// mereturn arraylist yang telah menampung data
-        return courseList;
-
-    }
-
-    @Override
-    public CourseEntity getCourseWithModules(String courseId) {
-        CourseEntity cours= null;
-        List<CourseResponse> course= remoteRepository.getAllCourses();
-        for (int i=0; i<course.size(); i++){
-            CourseResponse response= course.get(i);
-            if(response.getId().equals(courseId)){
-                // ketika response id sesuai dengan course id dari module maka akan mereturn hasil
-                cours= new CourseEntity(
-                        response.getId(),
-                        // menampung response dalam class entity
-                        response.getTitle(),
-                        response.getDescription(),
-                        response.getDate(),
-                        false,
-                        response.getImagePath()
-                );
+                // melakukan post kedalam viewmodel live data
+                coursesEnti.postValue(courseList);
             }
-        }
-        return cours;
-    }
 
-    @Override
-    public List<ModuleEntity> getAllModuleByCourse(String courseId) {
-        ArrayList<ModuleEntity> moduleList= new ArrayList<>();
-        List<ModuleResponse> moduleResponses= remoteRepository.getModule(courseId);
-        for (int i=0; i< moduleResponses.size(); i++){
-            ModuleResponse response= moduleResponses.get(i);
-            ModuleEntity course= new ModuleEntity(
-                    response.getModuleId(),
-                    response.getCourseId(),
-                    response.getTitle(),
-                    response.getPosition(),
-                    false
-                    );
-            moduleList.add(course);
-        }
-        return moduleList;
-    }
+            @Override
+            public void onDataNotAvailable() {
 
-    @Override
-    public List<CourseEntity> getBookmarkedCourses() {
-        ArrayList<CourseEntity> courseEntities= new ArrayList<>();
-        List<CourseResponse> course= remoteRepository.getAllCourses();
-        for (int i=0; i<course.size(); i++){
-            CourseResponse response= course.get(i);
-            CourseEntity courseBook= new CourseEntity(
-                 response.getId(),
-                 response.getTitle(),
-                 response.getDescription(),
-                 response.getDate(),
-                 false,
-                 response.getImagePath());
-            courseEntities.add(courseBook);
-        }
-        return courseEntities;
-
-    }
-
-    @Override
-    public ModuleEntity getContent(String courseId, String moduleId) {
-        List<ModuleResponse> moduleResponses= remoteRepository.getModule(courseId);
-        ModuleEntity  module= null;
-        for (int i=0; i<moduleResponses.size(); i++){
-            ModuleResponse moduleResponse= moduleResponses.get(i);
-            // mengmbil id dari module untuk menjalankan content
-            String id= moduleResponse.getModuleId();
-            if(id.equals(moduleId)){
-//                ketika module sama dengan id module yang di kirim
-                module= new ModuleEntity(
-                        id,
-                        moduleResponse.getCourseId(),
-                        moduleResponse.getTitle(),
-                        moduleResponse.getPosition(),
-                        false
-                );
-                // mengeset content entitiy berdasarkan content entity pada ModuleEntity
-                module.contentEntity= new ContentEntity(remoteRepository.getContent(moduleId).getContent());
-                break;
             }
-        }
-        return module;
+        });
+        return coursesEnti;
+    }
+
+    @Override
+    public LiveData<CourseEntity> getCourseWithModules(String courseId) {
+        MutableLiveData<CourseEntity> courseEnti= new MutableLiveData<>();
+        remoteRepository.getAllCourses(new RemoteRepository.LoadCoursesCallback() {
+            @Override
+            public void onAllCoursesReceived(List<CourseResponse> courseResponses) {
+                for (int i=0; i<courseResponses.size(); i++){
+                    CourseResponse response= courseResponses.get(i);
+                    if(response.getId().equals(courseId)){
+                        // ketika response id sesuai dengan course id dari module maka akan mereturn hasil
+                        CourseEntity course= new CourseEntity(
+                                response.getId(),
+                                // menampung response dalam class entity
+                                response.getTitle(),
+                                response.getDescription(),
+                                response.getDate(),
+                                false,
+                                response.getImagePath());
+                        // post value from array list into live data viewmodel
+                        courseEnti.postValue(course);
+                    }
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
+        return courseEnti;
+    }
+
+    @Override
+    public LiveData<List<ModuleEntity>> getAllModuleByCourse(String courseId) {
+       MutableLiveData<List<ModuleEntity>> moduleEnti= new MutableLiveData<>();
+       remoteRepository.getModule(courseId, new RemoteRepository.LoadModulesCallback() {
+           @Override
+           public void onAllModulesReceived(List<ModuleResponse> moduleResponses) {
+               ArrayList<ModuleEntity> moduleList= new ArrayList<>();
+               for (int i=0; i< moduleResponses.size(); i++){
+                   ModuleResponse response= moduleResponses.get(i);
+                   ModuleEntity course= new ModuleEntity(
+                           response.getModuleId(),
+                           response.getCourseId(),
+                           response.getTitle(),
+                           response.getPosition(),
+                           false
+                   );
+                   moduleList.add(course);
+               }
+               // post arraylist into livedata viewmodel
+               moduleEnti.postValue(moduleList);
+           }
+
+           @Override
+           public void onDataNotAvailable() {
+
+           }
+       });
+       return moduleEnti;
+    }
+
+    @Override
+    public LiveData<List<CourseEntity>> getBookmarkedCourses() {
+        MutableLiveData<List<CourseEntity>> courseEnti= new MutableLiveData<>();
+        remoteRepository.getAllCourses(new RemoteRepository.LoadCoursesCallback() {
+            @Override
+            public void onAllCoursesReceived(List<CourseResponse> courseResponses) {
+                List<CourseEntity> courseEntities= new ArrayList<>();
+                for (int i=0; i<courseResponses.size(); i++){
+                    CourseResponse response= courseResponses.get(i);
+                    CourseEntity courseBook= new CourseEntity(
+                            response.getId(),
+                            response.getTitle(),
+                            response.getDescription(),
+                            response.getDate(),
+                            false,
+                            response.getImagePath());
+                    courseEntities.add(courseBook);
+                }
+                courseEnti.postValue(courseEntities);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
+        return  courseEnti;
+    }
+
+    @Override
+    public LiveData<ModuleEntity> getContent(String courseId, String moduleId) {
+        MutableLiveData<ModuleEntity> moduleEnti= new MutableLiveData<>();
+        remoteRepository.getModule(courseId, new RemoteRepository.LoadModulesCallback() {
+            @Override
+            public void onAllModulesReceived(List<ModuleResponse> moduleResponses) {
+                ModuleEntity  module= null;
+                for (int i=0; i<moduleResponses.size(); i++){
+                    ModuleResponse moduleResponse= moduleResponses.get(i);
+                    // mengmbil id dari module untuk menjalankan content
+                    String id= moduleResponse.getModuleId();
+                    if(id.equals(moduleId)){
+                        remoteRepository.getContent(moduleId, new RemoteRepository.GetContentCallback() {
+                            @Override
+                            public void onContentReceived(ContentResponse contentResponse) {
+                                module.contentEntity= new ContentEntity(contentResponse.getContent());
+                                // get arraylist and add ito live data  viewmodel
+                                moduleEnti.postValue(module);
+                            }
+
+                            @Override
+                            public void onDataNotAvailable() {
+
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
+        return moduleEnti;
     }
 }
