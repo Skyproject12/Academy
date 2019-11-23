@@ -7,7 +7,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.example.academy.Data.CourseEntity;
+import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.R;
 import com.example.academy.utils.FakeDataDummy;
 
@@ -42,6 +42,13 @@ public class CourseReaderActivityTest {
 
     @Test
     public void loadModule() {
+        try {
+            Thread.sleep(3000);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+
+        }
         // get size of recyclerview
         onView(withId(R.id.rv_module)).check(matches(isDisplayed()));
         // memberi expectation intos checking
@@ -50,6 +57,13 @@ public class CourseReaderActivityTest {
 
     @Test
     public void clickModule() {
+        try {
+            Thread.sleep(3000);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+
+        }
         onView(withId(R.id.rv_module)).check(matches(isDisplayed()));
         // check ketika recyclerview diklik
         onView(withId(R.id.rv_module)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));

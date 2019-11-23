@@ -53,14 +53,18 @@ public class AcademyRepositoryTest {
 
     @Test
     public void getAllCourses(){
+        // ketika terdapat suatu callback maka kita harus memanggil doAnswere jika menggunakan expresso
         doAnswer(invocation -> {
+            // ketika memiliki parameter inputan sama dengan satu
             ((RemoteRepository.LoadCoursesCallback) invocation.getArguments()[0]).onAllCoursesReceived(courseResponses);
             return null;
 
         }).when(remote).getAllCourses(any(RemoteRepository.LoadCoursesCallback.class));
         List<CourseEntity> result= LiveDataTestUtils.getValue(academyRepository.getAllCourse());
-        verify(remote, times(1)).getAllCourses(any(RemoteRepository.LoadCoursesCallback.class));
+        // membuat remote tidak diulang ulang melainkan hanya satu kali dijalnakan
+        verify(remote, times( 1)).getAllCourses(any(RemoteRepository.LoadCoursesCallback.class));
         assertNotNull(result);
+        // memastikan data memiliki size sesuai dengan yang diharapkan
         assertEquals(courseResponses.size(), result.size());
 
     }
