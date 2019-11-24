@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.example.academy.Data.source.remote.response.ContentResponse;
 import com.example.academy.Data.source.remote.response.CourseResponse;
 import com.example.academy.Data.source.remote.response.ModuleResponse;
+import com.example.academy.Utils.IddlingTesting;
 import com.example.academy.Utils.JsonHelper;
 
 import java.util.List;
@@ -29,22 +30,32 @@ public class RemoteRepository {
     }
 
     public void  getAllCourses(LoadCoursesCallback callback){
+        // start iddling testing
+        IddlingTesting.increment();
         Handler handler= new Handler();
         // give delay 2000 second in handler
-        handler.postDelayed(()->callback.onAllCoursesReceived(jsonHelper.loadCourse()), SERVICE_LATENCY_IN_MILLIS);
+        handler.postDelayed(()->{
+            callback.onAllCoursesReceived(jsonHelper.loadCourse());
+            // netralkan iddling testing
+            IddlingTesting.decrement();
+        }, SERVICE_LATENCY_IN_MILLIS);
 
     }
 
     public void  getModule(String courseId, LoadModulesCallback callback){
+        IddlingTesting.increment();
        Handler handler= new Handler();
-       handler.postDelayed(()->callback.onAllModulesReceived(jsonHelper.loadModule(courseId)), SERVICE_LATENCY_IN_MILLIS);
+       handler.postDelayed(()->{
+           callback.onAllModulesReceived(jsonHelper.loadModule(courseId));
+           IddlingTesting.decrement();
+       }, SERVICE_LATENCY_IN_MILLIS);
 
     }
 
     public void  getContent(String moduleId, GetContentCallback callback){
-       Handler handler= new Handler();
-       handler.postDelayed(()->callback.onContentReceived(jsonHelper.loadContent(moduleId)), SERVICE_LATENCY_IN_MILLIS);
-
+        IddlingTesting.increment();
+       callback.onContentReceived(jsonHelper.loadContent(moduleId));
+       IddlingTesting.decrement();
     }
 
     // make interface for response in repository

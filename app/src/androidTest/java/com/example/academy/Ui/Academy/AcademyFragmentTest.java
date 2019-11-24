@@ -1,11 +1,14 @@
 package com.example.academy.Ui.Academy;
 
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.academy.R;
+import com.example.academy.Utils.IddlingTesting;
 import com.example.academy.testing.SingleFragmentActivity;
 import com.example.academy.utils.RecyclerViewItemCountAssertion;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,18 +25,20 @@ public class AcademyFragmentTest {
     private AcademyFragment academyFragment= new AcademyFragment();
     @Before
     public void setUp(){
+        IdlingRegistry.getInstance().register(IddlingTesting.getIddlingTesting());
+
         // set fragment to until tes
         activityTestRule.getActivity().setFragment(academyFragment);
     }
+
+    @After
+    public void tearDown(){
+        IdlingRegistry.getInstance().unregister(IddlingTesting.getIddlingTesting());
+
+    }
+
     @Test
     public void loadCourses(){
-        try {
-            Thread.sleep(3000);
-        }
-        catch(InterruptedException e){
-            e.printStackTrace();
-
-        }
         onView(withId(R.id.rv_academy)).check(matches(isDisplayed()));
         // membandingkan jumlah item dalam recyclerview
         onView(withId(R.id.rv_academy)).check(new RecyclerViewItemCountAssertion(5));

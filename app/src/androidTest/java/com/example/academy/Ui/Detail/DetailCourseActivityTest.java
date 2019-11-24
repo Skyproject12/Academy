@@ -3,14 +3,18 @@ package com.example.academy.Ui.Detail;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.R;
+import com.example.academy.Utils.IddlingTesting;
 import com.example.academy.utils.FakeDataDummy;
 import com.example.academy.utils.RecyclerViewItemCountAssertion;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -35,35 +39,27 @@ public class DetailCourseActivityTest {
         }
     };
 
+    @Before
+    public void setUp(){
+        IdlingRegistry.getInstance().register(IddlingTesting.getIddlingTesting());
+
+    }
+
+    @After
+    public void tearDown(){
+        IdlingRegistry.getInstance().unregister(IddlingTesting.getIddlingTesting());
+
+    }
+
     @Test
     public void loadCourse() {
-        try {
-            Thread.sleep(3000);
-        }
-        catch (InterruptedException e){
-            e.printStackTrace();
-
-        }
-        // memberi expectation hasil dari check
-        onView(withId(R.id.text_title)).check(matches(isDisplayed()));
-        // melakukan penyocokan berdasarkan  courseEntity getTitle
         onView(withId(R.id.text_title)).check(matches(withText(courseEntity.getTitle())));
-        onView(withId(R.id.text_date)).check(matches(isDisplayed()));
         onView(withId(R.id.text_date)).check(matches(withText(String.format("Deadline %s", courseEntity.getDeadline()))));
 
     }
 
     @Test
     public void loadModules() {
-        try {
-            Thread.sleep(3000);
-        }
-        catch (InterruptedException e){
-            e.printStackTrace();
-
-        }
-        // check size of arraylist with expectation is 7
-        onView(withId(R.id.rv_module)).check(matches(isDisplayed()));
         onView(withId(R.id.rv_module)).check(new RecyclerViewItemCountAssertion(7));
     }
 }

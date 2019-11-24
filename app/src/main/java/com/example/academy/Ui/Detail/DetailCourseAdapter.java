@@ -1,5 +1,6 @@
 package com.example.academy.Ui.Detail;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,10 @@ import java.util.List;
 public class DetailCourseAdapter extends RecyclerView.Adapter<DetailCourseAdapter.ViewHolder> {
     private List<ModuleEntity> mModule= new ArrayList<>();
 
-    public DetailCourseAdapter(List<ModuleEntity> mModule) {
-        this.mModule = mModule;
-    }
-
-    public void setmModule(List<ModuleEntity> mModule) {
-        if(mModule==null)return;
-        mModule.clear();
-        mModule.addAll(mModule);
+    public void setModules(List<ModuleEntity> mModul) {
+        if(mModul==null)return;
+        Log.d("AdapterCourse", "setModules: "+mModul.get(0).getmTitle());
+        mModule.addAll(mModul);
 
     }
 
