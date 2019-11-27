@@ -1,16 +1,45 @@
 package com.example.academy.Data.source.local.entity;
 
-import com.example.academy.Data.source.local.entity.ContentEntity;
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+
+@Entity(tableName = "moduleentities",
+    primaryKeys = {"moduleId","courseId"},
+    foreignKeys= @ForeignKey(entity = CourseEntity.class,
+    parentColumns = "courseId",
+    childColumns = "courseId"),
+    indices={@Index(value = "moduleId"),
+    @Index(value = "courseId")})
 
 public class ModuleEntity {
+    @Embedded
     // call content entity in module
     public ContentEntity contentEntity;
+
+    @NonNull
+    @ColumnInfo(name="moduleId")
     private String mModuleId;
+
+    @NonNull
+    @ColumnInfo(name="courseId")
     private String mCourseId;
+
+    @NonNull
+    @ColumnInfo(name="title")
     private String mTitle;
+
+    @NonNull
+    @ColumnInfo(name="position")
     private Integer mPosition;
+
+    @ColumnInfo(name = "read")
     // use status read
-    private boolean mRead= false;
+    private boolean mRead = false;
 
     public ModuleEntity() {
     }
@@ -20,8 +49,8 @@ public class ModuleEntity {
         this.mCourseId = mCourseId;
         this.mTitle = mTitle;
         this.mPosition = mPosition;
-        if(read!=null){
-            this.mRead= read;
+        if (read != null) {
+            this.mRead = read;
         }
     }
 
