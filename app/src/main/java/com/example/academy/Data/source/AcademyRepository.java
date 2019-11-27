@@ -1,15 +1,21 @@
 package com.example.academy.Data.source;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.academy.Data.source.local.LocalRepository;
 import com.example.academy.Data.source.local.entity.ContentEntity;
 import com.example.academy.Data.source.local.entity.CourseEntity;
+import com.example.academy.Data.source.local.entity.CourseWithModule;
 import com.example.academy.Data.source.local.entity.ModuleEntity;
+import com.example.academy.Data.source.remote.ApiResponse;
 import com.example.academy.Data.source.remote.RemoteRepository;
 import com.example.academy.Data.source.remote.response.ContentResponse;
 import com.example.academy.Data.source.remote.response.CourseResponse;
 import com.example.academy.Data.source.remote.response.ModuleResponse;
+import com.example.academy.Utils.AppExecutors;
+import com.example.academy.ValueObject.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +24,25 @@ public class AcademyRepository implements AcademyDataSource {
 
 
     private volatile  static AcademyRepository INSTANCE= null;
-    private final RemoteRepository remoteRepository;
+    private final RemoteRepository remoteRepository ;
+    private final AppExecutors appExecutors;
+    private final LocalRepository localRepository;
 
     // call remote repository
-    private AcademyRepository(RemoteRepository remoteRepository){
+    private AcademyRepository(@NonNull LocalRepository localRepository, @NonNull RemoteRepository remoteRepository, AppExecutors appExecutors){
         this.remoteRepository= remoteRepository;
+        this.localRepository= localRepository;
+        this.appExecutors= appExecutors;
+
     }
 
-    public static AcademyRepository getInstance(RemoteRepository remoteRepository){
+    public static AcademyRepository getInstance(LocalRepository localRepository, RemoteRepository remoteRepository, AppExecutors appExecutors){
         // instancee in academy repository when definition remote repository
         if(INSTANCE==null){
             synchronized (AcademyRepository.class){
                 if(INSTANCE==null){
                     // call remote repository
-                    INSTANCE= new AcademyRepository(remoteRepository);
+                    INSTANCE= new AcademyRepository(localRepository, remoteRepository, appExecutors);
                 }
             }
         }
@@ -39,167 +50,93 @@ public class AcademyRepository implements AcademyDataSource {
     }
 
     @Override
-    public LiveData<List<CourseEntity>> getAllCourse() {
-        MutableLiveData<List<CourseEntity>> coursesEnti= new MutableLiveData<>();
-        remoteRepository.getAllCourses(new RemoteRepository.LoadCoursesCallback() {
-            // mengambil data dari remote repository jika data berhasil di load
+    public LiveData<Resource<List<CourseEntity>>> getAllCourse() {
+        return new NetworkBoundResource<List<CourseEntity>, List<CourseResponse>>(appExecutors) {
             @Override
-            public void onAllCoursesReceived(List<CourseResponse> courseResponses) {
-                ArrayList<CourseEntity> courseList= new ArrayList<>();
-                for (int i=0; i< courseResponses.size(); i++){
-                    // tampung hasil dari get ke dalam suatu perulangan object CourseResponse
-                    CourseResponse response= courseResponses.get(i);
-                    // memasukkan hasil select kedalam object course entity
-                    CourseEntity course=new CourseEntity(
-                            response.getId(),
-                            response.getTitle(),
-                            response.getDescription(),
-                            response.getDate(),
-                            false,
-                            response.getImagePath());
-                    courseList.add(course);
-                }// mereturn arraylist yang telah menampung data
+            protected LiveData<List<CourseEntity>> loadFormDB() {
+                return localRepository.getAllCourses();
 
-                // melakukan post kedalam viewmodel live data
-                coursesEnti.postValue(courseList);
             }
 
             @Override
-            public void onDataNotAvailable() {
+            protected Boolean shouldFetch(List<CourseEntity> data) {
+                return (data==null) || (data.size()==0);
 
-            }
-        });
-        return coursesEnti;
-    }
-
-    @Override
-    public LiveData<CourseEntity> getCourseWithModules(String courseId) {
-        MutableLiveData<CourseEntity> courseEnti= new MutableLiveData<>();
-        remoteRepository.getAllCourses(new RemoteRepository.LoadCoursesCallback() {
-            @Override
-            public void onAllCoursesReceived(List<CourseResponse> courseResponses) {
-                for (int i=0; i<courseResponses.size(); i++){
-                    CourseResponse response= courseResponses.get(i);
-                    if(response.getId().equals(courseId)){
-                        // ketika response id sesuai dengan course id dari module maka akan mereturn hasil
-                        CourseEntity course= new CourseEntity(
-                                response.getId(),
-                                // menampung response dalam class entity
-                                response.getTitle(),
-                                response.getDescription(),
-                                response.getDate(),
-                                false,
-                                response.getImagePath());
-                        // post value from array list into live data viewmodel
-                        courseEnti.postValue(course);
-                    }
-                }
             }
 
             @Override
-            public void onDataNotAvailable() {
-
+            protected LiveData<ApiResponse<List<CourseResponse>>> createCall() {
+                return remoteRepository.getAllCoursesAsLiveData();
             }
-        });
-        return courseEnti;
-    }
 
-    @Override
-    public LiveData<List<ModuleEntity>> getAllModuleByCourse(String courseId) {
-       MutableLiveData<List<ModuleEntity>> moduleEnti= new MutableLiveData<>();
-       remoteRepository.getModule(courseId, new RemoteRepository.LoadModulesCallback() {
-           @Override
-           public void onAllModulesReceived(List<ModuleResponse> moduleResponses) {
-               ArrayList<ModuleEntity> moduleList= new ArrayList<>();
-               for (int i=0; i< moduleResponses.size(); i++){
-                   ModuleResponse response= moduleResponses.get(i);
-                   ModuleEntity course= new ModuleEntity(
-                           response.getModuleId(),
-                           response.getCourseId(),
-                           response.getTitle(),
-                           response.getPosition(),
-                           false
-                   );
-                   moduleList.add(course);
-               }
-               // post arraylist into livedata viewmodel
-               moduleEnti.postValue(moduleList);
-           }
-
-           @Override
-           public void onDataNotAvailable() {
-
-           }
-       });
-       return moduleEnti;
-    }
-
-    @Override
-    public LiveData<List<CourseEntity>> getBookmarkedCourses() {
-        MutableLiveData<List<CourseEntity>> courseEnti= new MutableLiveData<>();
-        remoteRepository.getAllCourses(new RemoteRepository.LoadCoursesCallback() {
             @Override
-            public void onAllCoursesReceived(List<CourseResponse> courseResponses) {
+            protected void saveCallResult(List<CourseResponse> data) {
                 List<CourseEntity> courseEntities= new ArrayList<>();
-                for (int i=0; i<courseResponses.size(); i++){
-                    CourseResponse response= courseResponses.get(i);
-                    CourseEntity courseBook= new CourseEntity(
-                            response.getId(),
-                            response.getTitle(),
-                            response.getDescription(),
-                            response.getDate(),
-                            false,
-                            response.getImagePath());
-                    courseEntities.add(courseBook);
+                for(CourseResponse courseResponse: data){
+                    courseEntities.add(new CourseEntity(
+                            courseResponse.getId(),
+                            courseResponse.getTitle(),
+                            courseResponse.getDescription(),
+                            courseResponse.getDate(),
+                            null,
+                            courseResponse.getImagePath()
+                            ));
                 }
-                courseEnti.postValue(courseEntities);
+                localRepository.insertCourse(courseEntities);
+            }
+        }.asLiveData();
+    }
+
+    @Override
+    public LiveData<Resource<CourseEntity>> getCourseWithModules(String courseId) {
+        return new NetworkBoundResource<CourseWithModule, List<ModuleResponse>>(appExecutors) {
+            @Override
+            protected LiveData<CourseWithModule> loadFormDB() {
+                return localRepository.getCourseWithModule(courseId);
+
             }
 
             @Override
-            public void onDataNotAvailable() {
+            protected Boolean shouldFetch(CourseWithModule data) {
+                return (data==null) || (data.mModule==null);
 
             }
-        });
-        return  courseEnti;
+
+            @Override
+            protected LiveData<ApiResponse<List<ModuleResponse>>> createCall() {
+                return remoteRepository.getAllModulesByCourseLiveData(courseId);
+
+            }
+
+            @Override
+            protected void saveCallResult(List<ModuleResponse> data) {
+
+            }
+        }
+    }
+
+    @Override
+    public LiveData<Resource<List<ModuleEntity>>> getAllModuleByCourse(String courseId) {
+        return null;
+    }
+
+    @Override
+    public LiveData<Resource<List<CourseEntity>>> getBookmarkedCourses() {
+        return null;
     }
 
     @Override
     public LiveData<ModuleEntity> getContent(String courseId, String moduleId) {
-        MutableLiveData<ModuleEntity> moduleEnti= new MutableLiveData<>();
-        remoteRepository.getModule(courseId, new RemoteRepository.LoadModulesCallback() {
-            @Override
-            public void onAllModulesReceived(List<ModuleResponse> moduleResponses) {
-                ModuleEntity  module;
-                for (int i=0; i<moduleResponses.size(); i++){
-                    ModuleResponse moduleResponse= moduleResponses.get(i);
-                    // mengmbil id dari module untuk menjalankan content
-                    String id= moduleResponse.getModuleId();
-                    if(id.equals(moduleId)){
-                        // set module from remote repositori architecture android
-                        module= new ModuleEntity(id, moduleResponse.getCourseId(), moduleResponse.getTitle(), moduleResponse.getPosition(), false);
-                        remoteRepository.getContent(moduleId, new RemoteRepository.GetContentCallback() {
-                            @Override
-                            public void onContentReceived(ContentResponse contentResponse) {
-                                module.contentEntity= new ContentEntity(contentResponse.getContent());
-                                // get arraylist and add ito live data  viewmodel
-                                moduleEnti.postValue(module);
-                            }
+        return null;
+    }
 
-                            @Override
-                            public void onDataNotAvailable() {
+    @Override
+    public void setCourseBookmark(CourseEntity course, boolean state) {
 
-                            }
-                        });
-                        break;
-                    }
-                }
-            }
+    }
 
-            @Override
-            public void onDataNotAvailable() {
+    @Override
+    public void setReadModule(ModuleEntity module) {
 
-            }
-        });
-        return moduleEnti;
     }
 }
