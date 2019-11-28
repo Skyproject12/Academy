@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -86,10 +87,23 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
             // set recyclervview
             adapter= new BookmarkAdapter(getActivity(), this);
             // set Observe from livedata viewmodel
-            bookmarkViewModel.getBookmarks().observe(this, course -> {
-                progressBar.setVisibility(View.GONE);
-                adapter.setCourse(course);
-                adapter.notifyDataSetChanged();
+            bookmarkViewModel.getBookmarks().observe(this, course->{
+                if(course!=null){
+                    switch (course.status){
+                        case Loading:
+                            progressBar.setVisibility(View.VISIBLE);
+                            break;
+                        case SUCCESS:
+                            progressBar.setVisibility(View.GONE);
+                            adapter.setCourse(course.data);
+                            adapter.notifyDataSetChanged();
+                        case ERROR:
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "Terjadi kesalahan ", Toast.LENGTH_SHORT).show();
+                            break;
+
+                    }
+                }
             });
             rvBookmark.setLayoutManager(new LinearLayoutManager(getContext()));
             rvBookmark.setHasFixedSize(true);

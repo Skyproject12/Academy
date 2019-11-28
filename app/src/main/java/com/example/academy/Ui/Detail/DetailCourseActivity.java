@@ -3,14 +3,19 @@ package com.example.academy.Ui.Detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,6 +49,7 @@ public class DetailCourseActivity extends AppCompatActivity {
     private List<ModuleEntity> courseMod;
     private DetailCourseViewModel detailCourseViewModel;
     String idCourse;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +72,29 @@ public class DetailCourseActivity extends AppCompatActivity {
         detailCourseViewModel.setCourseId(idCourse);
         adapter = new DetailCourseAdapter();
 
-        detailCourseViewModel.getModules().observe(this, moduleEntities -> {
-            progressBar.setVisibility(View.GONE);
-            Log.d("Berhasil", "onCreate: " + moduleEntities.get(0).getmTitle());
-            adapter.setModules(moduleEntities);
-            adapter.notifyDataSetChanged();
-        });
+        detailCourseViewModel.setCourseId(idCourse);
+        // call viewmodel where course all select
+        detailCourseViewModel.courseModule.observe(this, courseWithModuleResource->{
+            if(courseWithModuleResource!=null){
+                switch (courseWithModuleResource.status){
+                    case Loading:
+                        progressBar.setVisibility(View.VISIBLE);
+                        break;
+                    case SUCCESS:
+                        if(courseWithModuleResource.data!=null){
+                            progressBar.setVisibility(View.GONE);
+                            adapter.setModules(courseWithModuleResource.data.mModule);
+                            adapter.notifyDataSetChanged();
+                            // set populate course
+                            populateCourse(courseWithModuleResource.data.mCourse);
+                        }
+                        break;
+                    case ERROR:
+                        progressBar.setVisibility(View.GONE);
+                        break;
 
-        detailCourseViewModel.getCourse().observe(this, courseEntity -> {
-            populateCourse(courseEntity);
+                }
+            }
         });
 
         // mematikan scrol dalam recyclerview
@@ -105,6 +125,56 @@ public class DetailCourseActivity extends AppCompatActivity {
             intent.putExtra(CourseReaderActivity.EXTRA_COURSE_ID, courseEnti.getCourseId());
             v.getContext().startActivity(intent);
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        this.menu= menu;
+        detailCourseViewModel.courseModule.observe(this, courseWithModule->{
+            if(courseWithModule!=null){
+                switch (courseWithModule.status){
+                    case Loading:
+                        progressBar.setVisibility(View.VISIBLE);
+                        break;
+                    case SUCCESS:
+                        if(courseWithModule.data!=null){
+                            progressBar.setVisibility(View.GONE);
+                            // set courseWithModule check is state or not
+                            boolean state= courseWithModule.data.mCourse.isBookmarked();
+                            setBookmarkState(state);
+                        }
+                        break;
+                    case ERROR:
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(detailCourseActivity, "Terjadi kesalaha", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.action_bookmark){
+            detailCourseViewModel.setBookmark();
+            return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setBookmarkState(boolean state){
+        if(menu==null) return;
+        // set drawable apakah di bookmarked atau tidak
+        MenuItem menuItem= menu.findItem(R.id.action_bookmark);
+        if(state){
+            menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border));
+        }
+        else{
+            menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bookmark_white));
+        }
     }
 
     private static DetailCourseViewModel obtainViewModel(AppCompatActivity activity) {

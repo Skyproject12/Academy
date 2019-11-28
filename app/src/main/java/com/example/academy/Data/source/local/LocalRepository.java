@@ -37,7 +37,7 @@ public class LocalRepository {
         return academyDao.getCourseWithModuleById(courseId);
     }
 
-    public LiveData<List<ModuleEntity>> getAllModuleByCpurse(String courseId){
+    public LiveData<List<ModuleEntity>> getAllModuleByCourse(String courseId){
         return academyDao.getModuleByCourseId(courseId);
 
     }
@@ -58,7 +58,7 @@ public class LocalRepository {
         return academyDao.getModuleById(moduleId);
 
     }
-    public void update(String content, String moduleId){
+    public void updateContent(String content, String moduleId){
         academyDao.updateModuleByContent(content, moduleId);
 
     }

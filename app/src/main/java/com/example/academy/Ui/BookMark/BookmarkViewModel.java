@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.academy.Data.source.AcademyRepository;
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Utils.DataDummy;
+import com.example.academy.ValueObject.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class BookmarkViewModel extends ViewModel {
         this.academyRepository= mAcademyRepository;
     }
 
-    public LiveData<List<CourseEntity>> getBookmarks(){
+    public LiveData<Resource<List<CourseEntity>>> getBookmarks(){
         return academyRepository.getBookmarkedCourses();
 
     }

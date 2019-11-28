@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.R;
@@ -68,15 +69,28 @@ public class AcademyFragment extends Fragment {
         if(getActivity()!=null){
             academyViewModel= obtainViewModel(getActivity());
             // initial about viewmodel
-            // set arraylist into data from viewmodel
-            academyAdapter= new AcademyAdapter(getActivity());
-            // set viewmodel when use livedata
-            academyViewModel.getCourse().observe(this, course->{
-                progressBar.setVisibility(View.GONE);
-                // set courses
-                academyAdapter.setListCourse(course);
-                academyAdapter.notifyDataSetChanged();
+            academyViewModel.setUsername("Dicoding");
+            // defination viewmodel
+            academyViewModel.course.observe(this, course->{
+                if(course!=null){
+                    switch (course.status){
+                        case Loading:
+                            progressBar.setVisibility(View.VISIBLE);
+                            break;
+                        case SUCCESS:
+                            progressBar.setVisibility(View.GONE);
+                            // set berdasarkan networkBoundResource
+                            academyAdapter.setListCourse(course.data);
+                            // set adapter terus berubah sesuai dengan request data
+                            academyAdapter.notifyDataSetChanged();
+                            break;
+                        case ERROR:
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "Terjadi Kesalahan", Toast.LENGTH_SHORT).show();
+                            break;
 
+                    }
+                }
             });
             rvCouse.setLayoutManager(new LinearLayoutManager(getContext()));
             rvCouse.setHasFixedSize(true);
