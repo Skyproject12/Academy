@@ -169,7 +169,7 @@ public class DetailCourseActivity extends AppCompatActivity {
         if(menu==null) return;
         // set drawable apakah di bookmarked atau tidak
         MenuItem menuItem= menu.findItem(R.id.action_bookmark);
-        if(state){
+        if(!state){
             menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border));
         }
         else{

@@ -3,6 +3,11 @@ package com.example.academy.Ui.Reader.List;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,13 +18,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-
-import com.example.academy.R;
 import com.example.academy.Data.source.local.entity.ModuleEntity;
+import com.example.academy.R;
 import com.example.academy.Ui.Reader.CourseReaderActivity;
 import com.example.academy.Ui.Reader.CourseReaderCallback;
 import com.example.academy.Ui.Reader.CourseReaderViewModel;
@@ -27,10 +27,6 @@ import com.example.academy.viewmodel.viewModelVactory;
 
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ModuleListFragment extends Fragment implements MyAdapterClickListener {
 
     public static final String TAG = "ModuleListFragment";
@@ -40,7 +36,7 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     private ProgressBar progressBar;
     private CourseReaderViewModel courseReaderViewModel;
 
-    public static ModuleListFragment newInstance(){
+    public static ModuleListFragment newInstance() {
         return new ModuleListFragment();
     }
 
@@ -59,25 +55,40 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView= view.findViewById(R.id.rv_module);
-        progressBar= view.findViewById(R.id.progress_bar);
+        recyclerView = view.findViewById(R.id.rv_module);
+        progressBar = view.findViewById(R.id.progress_bar);
 
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             // initial about viewmodel
-            courseReaderViewModel= obtainViewModel(getActivity());
+            courseReaderViewModel = obtainViewModel(getActivity());
             // initial viewmodel
-            courseReaderViewModel= ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
-            moduleListAdapter= new ModuleListAdapter(this);
-            courseReaderViewModel.getModules().observe(this, moduleEntities -> {
-                if(moduleEntities!=null){
-                    // getModul from viewmodel in live data
-                    progressBar.setVisibility(View.GONE);
-                    populateRecyclerView(moduleEntities);
+            courseReaderViewModel = ViewModelProviders.of(getActivity()).get(CourseReaderViewModel.class);
+            moduleListAdapter = new ModuleListAdapter(this);
+            // call viewmodel
+            courseReaderViewModel.modules.observe(this, moduleEntitises -> {
+                if (moduleEntitises != null) {
+                    switch (moduleEntitises.status) {
+                        case Loading:
+                            progressBar.setVisibility(View.VISIBLE);
+                            break;
+                        case SUCCESS:
+                            // set success viewmodel
+                            progressBar.setVisibility(View.GONE);
+                            // moduleEntitises.data to get allModuleByCourse
+                            populateRecyclerView(moduleEntitises.data);
+                            break;
+                        case ERROR:
+                            // set Error
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "Terjadi Kesalahan", Toast.LENGTH_SHORT).show();
+                            break;
+
+                    }
                 }
             });
         }
@@ -86,7 +97,7 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        courseReaderCallback= ((CourseReaderActivity)context);
+        courseReaderCallback = ((CourseReaderActivity) context);
     }
 
     @Override
@@ -99,19 +110,19 @@ public class ModuleListFragment extends Fragment implements MyAdapterClickListen
     }
 
     // set module list
-    private void populateRecyclerView(List<ModuleEntity> moduleEntities){
+    private void populateRecyclerView(List<ModuleEntity> moduleEntities) {
         progressBar.setVisibility(View.GONE);
         moduleListAdapter.setModuleEntities(moduleEntities);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(moduleListAdapter);
-        DividerItemDecoration dividerItemDecoration= new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
-    private static CourseReaderViewModel obtainViewModel(FragmentActivity activity){
+    private static CourseReaderViewModel obtainViewModel(FragmentActivity activity) {
         viewModelVactory factory = viewModelVactory.getInstance(activity.getApplication());
-        return ViewModelProviders.of(activity,factory).get(CourseReaderViewModel.class);
+        return ViewModelProviders.of(activity, factory).get(CourseReaderViewModel.class);
 
     }
 

@@ -41,9 +41,6 @@ public class ModuleEntity {
     // use status read
     private boolean mRead = false;
 
-    public ModuleEntity() {
-    }
-
     public ModuleEntity(String mModuleId, String mCourseId, String mTitle, Integer mPosition, Boolean read) {
         this.mModuleId = mModuleId;
         this.mCourseId = mCourseId;
@@ -54,51 +51,43 @@ public class ModuleEntity {
         }
     }
 
-    public ContentEntity getContentEntity() {
-        return contentEntity;
-    }
-
-    public void setContentEntity(ContentEntity contentEntity) {
-        this.contentEntity = contentEntity;
-    }
-
-    public String getmModuleId() {
+    public String getModuleId() {
         return mModuleId;
     }
 
-    public void setmModuleId(String mModuleId) {
+    public void setModuleId(String mModuleId) {
         this.mModuleId = mModuleId;
     }
 
-    public String getmCourseId() {
+    public String getCourseId() {
         return mCourseId;
     }
 
-    public void setmCourseId(String mCourseId) {
+    public void setCourseId(String mCourseId) {
         this.mCourseId = mCourseId;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
+    public void setTitle(String mTitle) {
         this.mTitle = mTitle;
     }
 
-    public Integer getmPosition() {
+    public Integer getPosition() {
         return mPosition;
     }
 
-    public void setmPosition(Integer mPosition) {
+    public void setPosition(Integer mPosition) {
         this.mPosition = mPosition;
     }
 
-    public boolean ismRead() {
+    public boolean isRead() {
         return mRead;
     }
 
-    public void setmRead(boolean mRead) {
+    public void setRead(boolean mRead) {
         this.mRead = mRead;
     }
 }

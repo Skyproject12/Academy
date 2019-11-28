@@ -20,7 +20,6 @@ public class DetailCourseAdapter extends RecyclerView.Adapter<DetailCourseAdapte
 
     public void setModules(List<ModuleEntity> mModul) {
         if(mModul==null)return;
-        Log.d("AdapterCourse", "setModules: "+mModul.get(0).getmTitle());
         mModule.addAll(mModul);
 
     }
@@ -34,7 +33,7 @@ public class DetailCourseAdapter extends RecyclerView.Adapter<DetailCourseAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(mModule.get(position).getmTitle());
+        holder.bind(mModule.get(position).getTitle());
     }
 
     @Override

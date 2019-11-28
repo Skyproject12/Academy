@@ -21,6 +21,7 @@ import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.R;
 import com.example.academy.viewmodel.viewModelVactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -78,11 +79,16 @@ public class AcademyFragment extends Fragment {
                             progressBar.setVisibility(View.VISIBLE);
                             break;
                         case SUCCESS:
+                            academyAdapter= new AcademyAdapter(getActivity());
                             progressBar.setVisibility(View.GONE);
-                            // set berdasarkan networkBoundResource
+                            ArrayList<CourseEntity> list= new ArrayList<>();
                             academyAdapter.setListCourse(course.data);
                             // set adapter terus berubah sesuai dengan request data
                             academyAdapter.notifyDataSetChanged();
+                            rvCouse.setLayoutManager(new LinearLayoutManager(getContext()));
+                            rvCouse.setHasFixedSize(true);
+                            // set adapter
+                            rvCouse.setAdapter(academyAdapter);
                             break;
                         case ERROR:
                             progressBar.setVisibility(View.GONE);
@@ -92,10 +98,6 @@ public class AcademyFragment extends Fragment {
                     }
                 }
             });
-            rvCouse.setLayoutManager(new LinearLayoutManager(getContext()));
-            rvCouse.setHasFixedSize(true);
-            // set adapter
-            rvCouse.setAdapter(academyAdapter);
         }
     }
 

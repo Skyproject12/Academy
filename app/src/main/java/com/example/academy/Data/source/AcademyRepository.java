@@ -1,5 +1,8 @@
 package com.example.academy.Data.source;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -23,26 +26,26 @@ import java.util.List;
 public class AcademyRepository implements AcademyDataSource {
 
 
-    private volatile  static AcademyRepository INSTANCE= null;
-    private final RemoteRepository remoteRepository ;
+    private volatile static AcademyRepository INSTANCE = null;
+    private final RemoteRepository remoteRepository;
     private final AppExecutors appExecutors;
     private final LocalRepository localRepository;
 
     // call remote repository
-    private AcademyRepository(@NonNull LocalRepository localRepository, @NonNull RemoteRepository remoteRepository, AppExecutors appExecutors){
-        this.remoteRepository= remoteRepository;
-        this.localRepository= localRepository;
-        this.appExecutors= appExecutors;
+    private AcademyRepository(@NonNull LocalRepository localRepository, @NonNull RemoteRepository remoteRepository, AppExecutors appExecutors) {
+        this.remoteRepository = remoteRepository;
+        this.localRepository = localRepository;
+        this.appExecutors = appExecutors;
 
     }
 
-    public static AcademyRepository getInstance(LocalRepository localRepository, RemoteRepository remoteRepository, AppExecutors appExecutors){
+    public static AcademyRepository getInstance(LocalRepository localRepository, RemoteRepository remoteRepository, AppExecutors appExecutors) {
         // instancee in academy repository when definition remote repository
-        if(INSTANCE==null){
-            synchronized (AcademyRepository.class){
-                if(INSTANCE==null){
+        if (INSTANCE == null) {
+            synchronized (AcademyRepository.class) {
+                if (INSTANCE == null) {
                     // call remote repository
-                    INSTANCE= new AcademyRepository(localRepository, remoteRepository, appExecutors);
+                    INSTANCE = new AcademyRepository(localRepository, remoteRepository, appExecutors);
                 }
             }
         }
@@ -65,7 +68,7 @@ public class AcademyRepository implements AcademyDataSource {
             protected Boolean shouldFetch(List<CourseEntity> data) {
                 // check data null or not
                 // check size is 0 or not
-                return (data==null) || (data.size()==0);
+                return (data == null) || (data.size() == 0);
 
             }
 
@@ -77,8 +80,8 @@ public class AcademyRepository implements AcademyDataSource {
 
             @Override
             protected void saveCallResult(List<CourseResponse> data) {
-                List<CourseEntity> courseEntities= new ArrayList<>();
-                for(CourseResponse courseResponse: data){
+                List<CourseEntity> courseEntities = new ArrayList<>();
+                for (CourseResponse courseResponse : data) {
                     courseEntities.add(new CourseEntity(
                             courseResponse.getId(),
                             courseResponse.getTitle(),
@@ -86,7 +89,7 @@ public class AcademyRepository implements AcademyDataSource {
                             courseResponse.getDate(),
                             null,
                             courseResponse.getImagePath()
-                            ));
+                    ));
                 }
                 // save data into local repository
                 localRepository.insertCourse(courseEntities);
@@ -105,7 +108,7 @@ public class AcademyRepository implements AcademyDataSource {
 
             @Override
             protected Boolean shouldFetch(CourseWithModule data) {
-                return (data==null) || (data.mModule==null);
+                return (data == null) || (data.mModule == null);
 
             }
 
@@ -117,8 +120,8 @@ public class AcademyRepository implements AcademyDataSource {
 
             @Override
             protected void saveCallResult(List<ModuleResponse> data) {
-                List<ModuleEntity> moduleEntities= new ArrayList<>();
-                for (ModuleResponse moduleResponse: data){
+                List<ModuleEntity> moduleEntities = new ArrayList<>();
+                for (ModuleResponse moduleResponse : data) {
                     // add moduleEntities into list ModuleEntitys
                     moduleEntities.add(new ModuleEntity(moduleResponse.getModuleId(), courseId, moduleResponse.getTitle(), moduleResponse.getPosition(), null));
                 }
@@ -141,7 +144,7 @@ public class AcademyRepository implements AcademyDataSource {
             @Override
             protected Boolean shouldFetch(List<ModuleEntity> data) {
                 // check data null, size null or not
-                return (data==null) || (data.size()==0);
+                return (data == null) || (data.size() == 0);
 
             }
 
@@ -155,9 +158,9 @@ public class AcademyRepository implements AcademyDataSource {
             @Override
             protected void saveCallResult(List<ModuleResponse> data) {
                 // menampung data
-                List<ModuleEntity> moduleEntities= new ArrayList<>();
+                List<ModuleEntity> moduleEntities = new ArrayList<>();
                 // melakukan perulangan untuk mengeadd data
-                for (ModuleResponse moduleResponse: data){
+                for (ModuleResponse moduleResponse : data) {
                     moduleEntities.add(new ModuleEntity(moduleResponse.getModuleId(), courseId, moduleResponse.getTitle(), moduleResponse.getPosition(), null));
                 }
                 // melakuakan add ke dalam local
@@ -205,7 +208,7 @@ public class AcademyRepository implements AcademyDataSource {
 
             @Override
             protected Boolean shouldFetch(ModuleEntity data) {
-                return (data.contentEntity==null);
+                return (data.contentEntity == null);
 
             }
 
@@ -225,7 +228,7 @@ public class AcademyRepository implements AcademyDataSource {
 
     @Override
     public void setCourseBookmark(CourseEntity course, boolean state) {
-        Runnable runnable= () -> localRepository.setCourseBookmark(course, state);
+        Runnable runnable = () -> localRepository.setCourseBookmark(course, state);
         appExecutors.diskIO().execute(runnable);
 
     }

@@ -35,7 +35,7 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
     private List<CourseEntity> course;
 
     public BookmarkFragment(){
-        // create costructor
+
     }
 
     public static Fragment newInstance(){
@@ -99,7 +99,7 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
                             adapter.notifyDataSetChanged();
                         case ERROR:
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(getContext(), "Terjadi kesalahan ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Terjadi kesalahan "+course.data.get(0).getDeskription(), Toast.LENGTH_SHORT).show();
                             break;
 
                     }

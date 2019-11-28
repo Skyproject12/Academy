@@ -63,7 +63,7 @@ public class LocalRepository {
 
     }
     public void setReadModule(ModuleEntity module){
-        module.setmRead(true);
+        module.setRead(true);
         academyDao.updateModule(module);
 
     }

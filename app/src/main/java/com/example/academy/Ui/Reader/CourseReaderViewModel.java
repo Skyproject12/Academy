@@ -56,11 +56,11 @@ public class CourseReaderViewModel extends ViewModel {
             List<ModuleEntity> moduleEntitises = modules.getValue().data;
             if (moduleEntity != null && moduleEntitises != null) {
                 // get position
-                int position = moduleEntity.getmPosition();
+                int position = moduleEntity.getPosition();
                 // ketika position page masih kurang dari size module &&  position lebih dari kosong
                 if (position < moduleEntitises.size() && position >= 0) {
                     // set position pluss every click
-                    setSelectedModule(moduleEntitises.get(position + 1).getmModuleId());
+                    setSelectedModule(moduleEntitises.get(position + 1).getModuleId());
                 }
             }
         }
@@ -83,9 +83,9 @@ public class CourseReaderViewModel extends ViewModel {
             ModuleEntity moduleEntity= selectedContent.getValue().data;
             List<ModuleEntity> moduleEntitises = modules.getValue().data;
             if(moduleEntity!=null && moduleEntitises!=null){
-                int position= moduleEntity.getmPosition();
+                int position= moduleEntity.getPosition();
                 if(position< moduleEntitises.size() && position>=0){
-                    setSelectedModule(moduleEntitises.get(position-1).getmModuleId());
+                    setSelectedModule(moduleEntitises.get(position-1).getModuleId());
 
                 }
             }
