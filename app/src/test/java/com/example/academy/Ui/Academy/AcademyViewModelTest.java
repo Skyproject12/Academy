@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.academy.Data.source.AcademyRepository;
 import com.example.academy.Data.source.local.entity.CourseEntity;
+import com.example.academy.ValueObject.Resource;
 import com.example.academy.utils.FakeDataDummy;
 
 import org.junit.Before;
@@ -26,6 +27,7 @@ public class AcademyViewModelTest {
 
     private AcademyViewModel academyViewModel;
     private AcademyRepository academyRepository = mock(AcademyRepository.class);
+    private String USERNAME="Dicoding";
 
     @Before
     public void setUp() {
@@ -34,19 +36,15 @@ public class AcademyViewModelTest {
 
     @Test
     public void getCourses() {
-        // mengambil data dari dummy data
-        ArrayList<CourseEntity> dummyCourses = FakeDataDummy.generateDummy();
-        // membuat mutable list untuk menampung data
-        MutableLiveData<List<CourseEntity>> courses = new MutableLiveData<>();
-        // set data into mutable list
-        courses.setValue(dummyCourses);
-        // melakukan pengandaian hasil dari repository sama dengan mutable live data
-        when(academyRepository.getAllCourse()).thenReturn(courses);
-        Observer<List<CourseEntity>> observer = mock(Observer.class);
-        // digunakan untuk melakuakan pengecekan terus menerus, sesuai dengan data
-        academyViewModel.getCourse().observeForever(observer);
-        // digunakan untuk memastikan apkah terdapat perubahan pada live data
-        verify(observer).onChanged(dummyCourses);
+        Resource<List<CourseEntity>> resource= Resource.success(FakeDataDummy.generateDummy());
+        MutableLiveData<Resource<List<CourseEntity>>> dummyCourses= new MutableLiveData<>();
+        dummyCourses.setValue(resource);
+        when(academyRepository.getAllCourse()).thenReturn(dummyCourses);
+        Observer<Resource<List<CourseEntity>>> observer= mock(Observer.class);
+        academyViewModel.setUsername(USERNAME);
+        academyViewModel.course.observeForever(observer);
+        verify(observer).onChanged(resource);
+
     }
 
 }

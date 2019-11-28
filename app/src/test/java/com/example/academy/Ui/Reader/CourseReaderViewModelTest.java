@@ -8,6 +8,7 @@ import com.example.academy.Data.source.AcademyRepository;
 import com.example.academy.Data.source.local.entity.ContentEntity;
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Data.source.local.entity.ModuleEntity;
+import com.example.academy.ValueObject.Resource;
 import com.example.academy.utils.FakeDataDummy;
 
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class CourseReaderViewModelTest {
     // save data module entity into arraylist
     private ArrayList<ModuleEntity> moduleEntiti= FakeDataDummy.generateDummyModules(courseId);
     // get id from moduleEntiti
-    private String idModule= moduleEntiti.get(0).getmModuleId();
+    private String idModule= moduleEntiti.get(0).getModuleId();
     @Before
     public void setUp(){
         courseReaderViewModel= new CourseReaderViewModel(academyRepository);
@@ -49,27 +50,32 @@ public class CourseReaderViewModelTest {
     }
     @Test
     public void getModul(){
-        MutableLiveData<List<ModuleEntity>> module= new MutableLiveData<>();
-        module.setValue(moduleEntiti);
-        when(academyRepository.getAllModuleByCourse(courseId)).thenReturn(module);
-        Observer<List<ModuleEntity>> observer= mock(Observer.class);
-        courseReaderViewModel.getModules().observeForever(observer);
-        verify(observer).onChanged(moduleEntiti);
+       MutableLiveData<Resource<List<ModuleEntity>>> moduleEntitises= new MutableLiveData<>();
+       Resource<List<ModuleEntity>> resource= Resource.success(moduleEntiti);
+       moduleEntitises.setValue(resource);
+       when(academyRepository.getAllModuleByCourse(courseId)).thenReturn(moduleEntitises);
+
+
+       Observer<Resource<List<ModuleEntity>>> observer= mock(Observer.class);
+       courseReaderViewModel.modules.observeForever(observer);
+       verify(observer).onChanged(resource);
+
 
     }
     @Test
     public void getSelectedModule(){
-        MutableLiveData<ModuleEntity> module= new MutableLiveData<>();
+        MutableLiveData<Resource<ModuleEntity>> moduleEntity= new MutableLiveData<>();
         ModuleEntity dummyModule= moduleEntiti.get(0);
-        String content = "<h3 class=\"fr-text-bordered\">Modul 0 : Introduction</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>";
+        String content="sumendra";
         dummyModule.contentEntity= new ContentEntity(content);
-        module.setValue(dummyModule);
-
-        when(academyRepository.getContent(courseId, idModule)).thenReturn(module);
+        Resource<ModuleEntity> resource= Resource.success(dummyModule);
+        moduleEntity.setValue(resource);
+        when(academyRepository.getContent(idModule)).thenReturn(moduleEntity);
         courseReaderViewModel.setSelectedModule(idModule);
-        Observer<ModuleEntity> observer= mock(Observer.class);
-        courseReaderViewModel.getSlectedModule().observeForever(observer);
-        verify(observer).onChanged(dummyModule);
+        Observer<Resource<ModuleEntity>> observer= mock(Observer.class);
+        courseReaderViewModel.selectedContent.observeForever(observer);
+        verify(observer).onChanged(resource);
+
     }
 
 }

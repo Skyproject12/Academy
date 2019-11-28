@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.academy.Data.source.AcademyRepository;
 import com.example.academy.Data.source.local.entity.CourseEntity;
+import com.example.academy.ValueObject.Resource;
 import com.example.academy.utils.FakeDataDummy;
 
 import org.junit.Before;
@@ -34,14 +35,14 @@ public class BookmarkViewModelTest {
     }
     @Test
     public void getBookmark(){
-        ArrayList<CourseEntity> dummyCourses= FakeDataDummy.generateDummy();
-        MutableLiveData<List<CourseEntity>> courses= new MutableLiveData<>();
-        courses.setValue(dummyCourses);
-        when(academyRepository.getBookmarkedCourses()).thenReturn(courses);
-        Observer<List<CourseEntity>> observer= mock(Observer.class);
+        Resource<List<CourseEntity>> resource= Resource.success(FakeDataDummy.generateDummy());
+        MutableLiveData<Resource<List<CourseEntity>>> dummyCourse= new MutableLiveData<>();
+        dummyCourse.setValue(resource);
+        when(academyRepository.getBookmarkedCourses()).thenReturn(dummyCourse);
+        Observer<Resource<List<CourseEntity>>> observer= mock(Observer.class);
         bookmarkViewModel.getBookmarks().observeForever(observer);
+        verify(observer).onChanged(resource);
 
-        verify(observer).onChanged(dummyCourses);
     }
 
 }
