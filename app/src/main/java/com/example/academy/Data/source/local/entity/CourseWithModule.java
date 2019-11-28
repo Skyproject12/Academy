@@ -6,6 +6,7 @@ import androidx.room.Relation;
 import java.util.List;
 
 public class CourseWithModule {
+    // mengambil suatu object  harus menggunakan embeded
     @Embedded
     public CourseEntity mCourse;
 

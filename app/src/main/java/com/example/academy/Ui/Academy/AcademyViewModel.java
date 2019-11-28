@@ -23,7 +23,7 @@ public class AcademyViewModel extends ViewModel {
 
     }
 
-    // get Course
+    // transformation berfungsi membawa seluruh data dari lifecrcle
     LiveData<Resource<List<CourseEntity>>> course= Transformations.switchMap(mLogin, data->academyRepository.getAllCourse());
 
     // set username

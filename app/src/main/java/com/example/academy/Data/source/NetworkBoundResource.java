@@ -7,6 +7,7 @@ import com.example.academy.Data.source.remote.ApiResponse;
 import com.example.academy.Utils.AppExecutors;
 import com.example.academy.ValueObject.Resource;
 
+// class ini akan berjalan ketika local tidak menyediakan data secara actual
 public abstract class NetworkBoundResource <ResultType, RequestType>{
 
     // berfungsi untuk menambahkan localRepository ke dalam academyRepository
@@ -18,9 +19,13 @@ public abstract class NetworkBoundResource <ResultType, RequestType>{
 
     }
 
+    // hal yang disediakan di network resource
     protected abstract LiveData<ResultType> loadFormDB();
+    // check apakah data && null kosong
     protected abstract Boolean shouldFetch(ResultType data);
+    // get data from online
     protected abstract LiveData<ApiResponse<RequestType>> createCall();
+    // menyimpan data from local atau dari online
     protected abstract void saveCallResult(RequestType data);
 
     public NetworkBoundResource(AppExecutors appExecutors){
