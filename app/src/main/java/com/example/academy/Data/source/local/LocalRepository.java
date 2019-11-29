@@ -1,6 +1,7 @@
 package com.example.academy.Data.source.local;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 
 import com.example.academy.Data.source.local.Dao.AcademyDao;
 import com.example.academy.Data.source.local.entity.CourseEntity;
@@ -65,6 +66,12 @@ public class LocalRepository {
     public void setReadModule(ModuleEntity module){
         module.setRead(true);
         academyDao.updateModule(module);
+
+    }
+
+    public DataSource.Factory<Integer, CourseEntity> getBookmarkedCoursePaged(){
+        // mengambil response dao
+        return academyDao.getBookmarkedCourseAsPaged();
 
     }
 

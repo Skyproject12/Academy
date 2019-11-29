@@ -2,6 +2,7 @@ package com.example.academy.Data.source.local.Dao;
 
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -14,6 +15,7 @@ import com.example.academy.Data.source.local.entity.CourseWithModule;
 import com.example.academy.Data.source.local.entity.ModuleEntity;
 
 import java.util.List;
+
 
 @Dao
 
@@ -51,5 +53,10 @@ public interface AcademyDao {
 
     @Query("Update moduleentities set content = :content Where moduleId = :moduleId")
     int updateModuleByContent(String content, String moduleId);
+
+    // select * from course whew id bookmarked=1
+    @Query("SELECT * FROM courseentities where bookmarked=1")
+    DataSource.Factory<Integer, CourseEntity>getBookmarkedCourseAsPaged();
+
 
 }

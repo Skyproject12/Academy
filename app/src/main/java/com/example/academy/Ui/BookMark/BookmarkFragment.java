@@ -13,21 +13,24 @@ import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.academy.R;
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.viewmodel.viewModelVactory;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// pangging digunakan untuk mengelompokkan data menajdi bagian yang lebih sederhana
 
 public class BookmarkFragment extends Fragment implements BookmarkFragmentCallback {
 
     View view;
-    private BookmarkAdapter adapter;
+    private BookmarkPagedAdapter adapter;
     private RecyclerView rvBookmark;
     private ProgressBar progressBar;
 
@@ -85,9 +88,9 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
             // call viewmodel
             // set data array list from viewmodel
             // set recyclervview
-            adapter= new BookmarkAdapter(getActivity(), this);
+            adapter= new BookmarkPagedAdapter( this);
             // set Observe from livedata viewmodel
-            bookmarkViewModel.getBookmarks().observe(this, course->{
+            bookmarkViewModel.getBookmarksPaged().observe(this, course->{
                 if(course!=null){
                     switch (course.status){
                         case Loading:
@@ -95,11 +98,11 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
                             break;
                         case SUCCESS:
                             progressBar.setVisibility(View.GONE);
-                            adapter.setCourse(course.data);
+                            adapter.submitList(course.data);
                             adapter.notifyDataSetChanged();
+                            itemTuchHelper.attachToRecyclerView(rvBookmark);
                         case ERROR:
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(getContext(), "Terjadi kesalahan "+course.data.get(0).getDeskription(), Toast.LENGTH_SHORT).show();
                             break;
 
                     }
@@ -111,6 +114,44 @@ public class BookmarkFragment extends Fragment implements BookmarkFragmentCallba
             rvBookmark.setAdapter(adapter);
         }
     }
+    // make ketika di swipe akan menghapus data
+    private ItemTouchHelper itemTuchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            // mengatur fungsi swife agar dapat melakukan ke kiri, ke kanan
+            return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return true;
+
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            if(getView()!=null){
+                int swipePosition= viewHolder.getAdapterPosition();
+                // mengambil position yang di swife
+                CourseEntity courseEntity= adapter.getItemById(swipePosition);
+                // mengset bookmark menjadi false
+                bookmarkViewModel.setBookmark(courseEntity);
+                // menampilkan pengembalian data pada layar ketika recycleview di swife
+                Snackbar snackbar= Snackbar.make(getView(), R.string.message_undo, Snackbar.LENGTH_SHORT);
+                snackbar.setAction(R.string.message_ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // merefresh bookmark berdasarkan data dari courseEntity
+                        bookmarkViewModel.setBookmark(courseEntity);
+                        // melakukan set kembali bookmark menjadi true
+                    }
+                });
+                snackbar.show();
+
+            }
+        }
+    });
 
     @NonNull
     private static BookmarkViewModel obtainViewModel(FragmentActivity activity){

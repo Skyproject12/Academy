@@ -99,4 +99,8 @@ dependencies {
     // Dependencies for Idle Resource
     implementation "androidx.test.espresso:espresso-idling-resource:$idleResourceVersion"
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
+
+    // implrmrntstion for pagging
+    implementation 'androidx.paging:paging-runtime:2.1.0'
+
 }

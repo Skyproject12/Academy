@@ -1,6 +1,7 @@
 package com.example.academy.Data.source;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
 
 import com.example.academy.Data.source.local.entity.CourseEntity;
 import com.example.academy.Data.source.local.entity.CourseWithModule;
@@ -28,4 +29,8 @@ public interface AcademyDataSource {
 
     // berfunsgi memperlihatkan modul yang terakhir dibaca
     void setReadModule(ModuleEntity module);
+
+    // get Bookmarked use pangging
+    LiveData<Resource<PagedList<CourseEntity>>> getBookmarkedCoursePaged();
+
 }
