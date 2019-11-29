@@ -17,7 +17,10 @@
     <FrameLayout
         android:id="@+id/frame_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_weight="1"
+        android:background="@android:color/white"/>
 
 
 </LinearLayout>
