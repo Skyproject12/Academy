@@ -2,6 +2,8 @@ package com.example.academy.Data.source;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 import com.example.academy.Data.source.local.LocalRepository;
 import com.example.academy.Data.source.local.entity.CourseEntity;
@@ -232,4 +234,33 @@ class FakeAcademyRepository implements AcademyDataSource {
         appExecutors.diskIO().execute(runnable);
 
     }
+
+    @Override
+    public LiveData<Resource<PagedList<CourseEntity>>> getBookmarkedCoursePaged() {
+        return new NetworkBoundResource<PagedList<CourseEntity>, List<ContentResponse>>(appExecutors) {
+            @Override
+            protected LiveData<PagedList<CourseEntity>> loadFormDB() {
+                return new LivePagedListBuilder<>(localRepository.getBookmarkedCoursePaged(), 20).build();
+
+            }
+
+            @Override
+            protected Boolean shouldFetch(PagedList<CourseEntity> data) {
+                return false;
+
+            }
+
+            @Override
+            protected LiveData<ApiResponse<List<ContentResponse>>> createCall() {
+                return null;
+
+            }
+
+            @Override
+            protected void saveCallResult(List<ContentResponse> data) {
+
+            }
+        }.asLiveData();
+    }
+
 }

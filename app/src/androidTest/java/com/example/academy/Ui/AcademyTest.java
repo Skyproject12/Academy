@@ -40,7 +40,8 @@ public class AcademyTest {
     @Test
     public void toDetailActivityTest(){
         onView(withId(R.id.rv_academy)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.text_title)).check(matches(withText("Menjadi Android Develover Expert")));
+        onView(withId(R.id.text_title)).check(matches(isDisplayed()));
+        onView(withId(R.id.text_title)).check(matches(withText("Menjadi Android Developer Expert")));
 
     }
     @Test
