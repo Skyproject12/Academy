@@ -26,7 +26,9 @@ public class AcademyViewModelTest {
     public InstantTaskExecutorRule instantTaskExecutorRule= new InstantTaskExecutorRule();
 
     private AcademyViewModel academyViewModel;
+    // defination of repository
     private AcademyRepository academyRepository = mock(AcademyRepository.class);
+    // set username
     private String USERNAME="Dicoding";
 
     @Before
@@ -36,12 +38,17 @@ public class AcademyViewModelTest {
 
     @Test
     public void getCourses() {
+        // get course from dummy data
         Resource<List<CourseEntity>> resource= Resource.success(FakeDataDummy.generateDummy());
+        // make mutable
         MutableLiveData<Resource<List<CourseEntity>>> dummyCourses= new MutableLiveData<>();
+        // mengeset mutable live data use data resource
         dummyCourses.setValue(resource);
+        // melakukan pengecekan
         when(academyRepository.getAllCourse()).thenReturn(dummyCourses);
         Observer<Resource<List<CourseEntity>>> observer= mock(Observer.class);
         academyViewModel.setUsername(USERNAME);
+        // melakukan observer secara forever untuk mendapatkan data yang realtime
         academyViewModel.course.observeForever(observer);
         verify(observer).onChanged(resource);
 

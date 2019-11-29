@@ -25,6 +25,7 @@ public class AcademyFragmentTest {
     private AcademyFragment academyFragment= new AcademyFragment();
     @Before
     public void setUp(){
+        // set iddling Testing
         IdlingRegistry.getInstance().register(IddlingTesting.getIddlingTesting());
 
         // set fragment to until tes
@@ -33,6 +34,7 @@ public class AcademyFragmentTest {
 
     @After
     public void tearDown(){
+        // unregis iddling testing
         IdlingRegistry.getInstance().unregister(IddlingTesting.getIddlingTesting());
 
     }

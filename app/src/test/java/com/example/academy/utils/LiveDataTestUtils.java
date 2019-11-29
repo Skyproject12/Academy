@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+// diginakan untuk pengecekan repository
 public class LiveDataTestUtils {
     @SuppressWarnings("unchecked")
     public static <T> T getValue(LiveData<T>liveData){

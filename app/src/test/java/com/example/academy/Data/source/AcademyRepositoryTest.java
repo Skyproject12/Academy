@@ -39,6 +39,7 @@ public class AcademyRepositoryTest {
     public InstantTaskExecutorRule instantTaskExecutorRule= new InstantTaskExecutorRule();
 
     private RemoteRepository remote =  Mockito.mock(RemoteRepository.class);
+    // call  local repository
     private LocalRepository local= Mockito.mock(LocalRepository.class);
     private InstantAppExecutors instantAppExecutors= Mockito.mock(InstantAppExecutors.class);
     private FakeAcademyRepository academyRepository= new FakeAcademyRepository(local, remote, instantAppExecutors);
@@ -62,11 +63,15 @@ public class AcademyRepositoryTest {
     @Test
     public void getAllCourses(){
         MutableLiveData<List<CourseEntity>> dummyCourse= new MutableLiveData<>();
+        // set mutablelive data use  fake dummy data
         dummyCourse.setValue(FakeDataDummy.generateDummy());
+        // melakukan pengecekan apakah lokal sama dengan hasil dari mutablelive data
         when(local.getAllCourses()).thenReturn(dummyCourse);
+        // melakukan pengambilan data all course from academy repository
         Resource<List<CourseEntity>> result= LiveDataTestUtils.getValue(academyRepository.getAllCourse());
         verify(local).getAllModuleByCourse(courseId);
 
+        // memastikan data tidak kosong
         assertNotNull(result);
         // memastikan data memiliki size sesuai dengan yang diharapkan
         assertEquals(courseResponses.size(), result.data.size());
